@@ -4,6 +4,7 @@ import { Layout, Menu, Avatar, Typography, Modal, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const { Sider } = Layout;
+import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLogout } from "../redux/actions/Auth";
 
@@ -69,7 +70,7 @@ const SideBar = ({ collapsed, itemMenu }) => {
             collapsed ? `justify-center` : `justify-start`
           } items-center px-6 py-2.5 mb-5 rounded-xl logout-button`}
         >
-          <LogoutOutlined className="text-gray-100" />
+          <ArrowLeftOnRectangleIcon className="text-gray-100 w-6 h6" />
           {collapsed ? null : (
             <span className="text-gray-100 ml-3">Logout</span>
           )}

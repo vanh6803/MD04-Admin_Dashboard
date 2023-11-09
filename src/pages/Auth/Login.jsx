@@ -11,7 +11,7 @@ import {
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLoginRequest } from "../redux/actions/Auth";
+import { fetchLoginRequest } from "../../redux/actions/Auth";
 
 const { Title } = Typography;
 

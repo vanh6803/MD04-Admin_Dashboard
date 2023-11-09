@@ -3,10 +3,17 @@ import {
   DesktopOutlined,
   PieChartOutlined,
   PieChartFilled,
+  HomeOutlined,
 } from "@ant-design/icons";
 import { Layout, theme } from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 const { Content } = Layout;
+import {
+  HomeIcon,
+  Squares2X2Icon,
+  DocumentChartBarIcon,
+  UserGroupIcon,
+} from "@heroicons/react/24/solid";
 import "./App.css";
 import SideBar from "./components/SideBar";
 import HeaderBar from "./components/HeaderBar";
@@ -21,14 +28,24 @@ function getItem(label, key, icon, children) {
   };
 }
 const itemMenu = [
-  getItem(<Link to={"/"}>Home</Link>, "1", <PieChartOutlined />),
-  getItem(<Link to={"/user"}>product</Link>, "2", <DesktopOutlined />),
-  getItem("Chart", "chart", <PieChartFilled />, [
-    getItem("Tom", "3"),
-    getItem("Bill", "4"),
-    getItem("Alex", "5"),
+  getItem(
+    <Link to={"/"}>Trang chủ</Link>,
+    "1",
+    <HomeIcon className="w-5 h-5" />
+  ),
+  getItem("Sản phẩm", "product", <Squares2X2Icon className="w-5 h-5" />, [
+    getItem(<Link to={"/products"}>Tất cả</Link>, "2"),
+    getItem(<Link to={"/stores"}>Cửa hàng</Link>, "3"),
+    getItem(<Link to="/banner">Quảng cáo</Link>, "4"),
   ]),
-  getItem("User", "sub2", "", [getItem("Team 1", "6"), getItem("Team 2", "8")]),
+  getItem("Biểu đồ", "chart", <DocumentChartBarIcon className="w-5 h-5" />, [
+    getItem(<Link to="/chart/product">Sản phẩm</Link>, "5"),
+    getItem(<Link to="/chart/store">Cửa hàng</Link>, "6"),
+  ]),
+  getItem("Mọi người", "user", <UserGroupIcon className="w-5 h-5" />, [
+    getItem(<Link to="/customers">Người dùng</Link>, "7"),
+    getItem(<Link to="/staffs">Nhân viên</Link>, "8"),
+  ]),
 ];
 
 const App = () => {
@@ -40,17 +57,18 @@ const App = () => {
   } = theme.useToken();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(data);
-    if (data == null) {
-      navigate("/login");
-    }
-  }, [data, navigate]);
+  //todo: check login
+  // useEffect(() => {
+  //   console.log(data);
+  //   if (data == null) {
+  //     navigate("/login");
+  //   }
+  // }, [data, navigate]);
 
   return (
     <Layout className="h-[100vh]">
       <SideBar collapsed={collapsed} itemMenu={itemMenu} />
-      <Layout>
+      <Layout className="h-[100vh]">
         <HeaderBar
           toggleMenu={() => setCollapsed(!collapsed)}
           collapsed={collapsed}
@@ -59,8 +77,8 @@ const App = () => {
           style={{
             margin: "10px 10px",
             padding: 24,
-            minHeight: 280,
             background: colorBgContainer,
+            overflow: "auto",
           }}
         >
           <Outlet />

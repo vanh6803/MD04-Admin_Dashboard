@@ -1,9 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import Login from "../pages/Login";
+import Login from "../pages/Auth/Login";
 import Home from "../pages/Home";
-import User from "../pages/User";
-import Chart from "../pages/Chart";
 import App from "../App";
+import Customers from "../pages/Users/Customers";
+import Staffs from "../pages/Users/Staffs";
+import Products from "./../pages/Products/Products";
+import ProductsChart from "./../pages/Charts/Products";
+import StoreChart from "./../pages/Charts/Store";
+import Store from "./../pages/Products/Store";
+import Banner from "./../pages/Products/Banner";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -12,8 +17,13 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home /> },
-      { path: "user", element: <User /> },
-      { path: "chart", element: <Chart /> },
+      { path: "/customers", element: <Customers /> },
+      { path: "/staffs", element: <Staffs /> },
+      { path: "/products", element: <Products /> },
+      { path: "/stores", element: <Store /> },
+      { path: "/banner", element: <Banner /> },
+      { path: "/chart/product", element: <ProductsChart /> },
+      { path: "/chart/store", element: <StoreChart /> },
     ],
   },
 ]);
