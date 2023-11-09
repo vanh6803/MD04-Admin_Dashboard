@@ -33,7 +33,7 @@ const itemMenu = [
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const data = useSelector((state) => state.loginReducer.data);
+  const data = useSelector((state) => state.authReducer.data);
   const dispatch = useDispatch();
   const {
     token: { colorBgContainer },

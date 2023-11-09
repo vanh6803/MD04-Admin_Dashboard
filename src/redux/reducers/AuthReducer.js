@@ -1,4 +1,9 @@
-import { LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS } from "../constants";
+import {
+  CLEAR_DATA_TOKEN,
+  LOGIN_FAILURE,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+} from "../constants";
 
 const initialState = {
   loading: false,
@@ -6,7 +11,7 @@ const initialState = {
   error: null,
 };
 
-const loginReducer = (state = initialState, action) => {
+const AuthReducer = (state = initialState, action) => {
   console.log("action type - product reducer", action);
   switch (action.type) {
     case LOGIN_REQUEST:
@@ -30,9 +35,16 @@ const loginReducer = (state = initialState, action) => {
         error: action.payload,
         data: null,
       };
+    case CLEAR_DATA_TOKEN:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        data: null,
+      };
     default:
       return state;
   }
 };
 
-export default loginReducer;
+export default AuthReducer;

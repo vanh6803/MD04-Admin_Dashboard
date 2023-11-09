@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import { LogoutOutlined } from "@ant-design/icons";
-import { Layout, Menu, Avatar, Typography, Modal } from "antd";
+import { Layout, Menu, Avatar, Typography, Modal, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const { Sider } = Layout;
 import { useDispatch, useSelector } from "react-redux";
+import { fetchLogout } from "../redux/actions/Auth";
 
 const SideBar = ({ collapsed, itemMenu }) => {
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.loginReducer.loading);
-  const error = useSelector((state) => state.loginReducer.error);
-  const data = useSelector((state) => state.loginReducer.data);
+  const loading = useSelector((state) => state.authReducer.loading);
+  const error = useSelector((state) => state.authReducer.error);
+  const data = useSelector((state) => state.authReducer.data);
 
   const showLogoutModal = () => {
     setLogoutModalVisible(true);
@@ -23,10 +24,23 @@ const SideBar = ({ collapsed, itemMenu }) => {
   };
 
   const confirmLogout = () => {
-    axios.get("http://localhost:3000/api/logout", {
-      headers: { Authorization: "Bearer " + data.token },
-    });
-    navigate("/login");
+    axios
+      .get("http://localhost:3000/api/logout", {
+        headers: { Authorization: "Bearer " + data.token },
+      })
+      .then((response) => {
+        dispatch(fetchLogout());
+        navigate("/login");
+      })
+      .catch((error) => {
+        notification.error({
+          message: "Logout Failed",
+          description: error.response.data.message
+            ? error.response.data.message
+            : error,
+          duration: 3,
+        });
+      });
     hideLogoutModal();
   };
   return (

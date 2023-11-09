@@ -8,20 +8,19 @@ import {
   Form,
   Input,
   notification,
-  Spin,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLoginRequest } from "../redux/actions/Login";
+import { fetchLoginRequest } from "../redux/actions/Auth";
 
 const { Title } = Typography;
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.loginReducer.loading);
-  const error = useSelector((state) => state.loginReducer.error);
-  const data = useSelector((state) => state.loginReducer.data);
+  const loading = useSelector((state) => state.authReducer.loading);
+  const error = useSelector((state) => state.authReducer.error);
+  const data = useSelector((state) => state.authReducer.data);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,8 +39,15 @@ const Login = () => {
         duration: 3,
       });
     } else if (data) {
-      // Successful login, navigate to the App component
-      navigate("/");
+      if (data.role == "customer") {
+        notification.error({
+          message: "Login Failed",
+          description: "Bạn không có quyền truy cập",
+          duration: 3,
+        });
+      } else {
+        navigate("/");
+      }
     }
   }, [error, data, navigate]);
 

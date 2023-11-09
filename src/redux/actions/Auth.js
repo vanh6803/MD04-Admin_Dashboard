@@ -1,4 +1,9 @@
-import { LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS } from "../constants";
+import {
+  CLEAR_DATA_TOKEN,
+  LOGIN_FAILURE,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+} from "../constants";
 
 export const fetchLoginRequest = (data) => {
   return {
@@ -18,5 +23,11 @@ export const fetchLoginFailure = (error) => {
   return {
     type: LOGIN_FAILURE,
     payload: error,
+  };
+};
+
+export const fetchLogout = () => {
+  return {
+    type: CLEAR_DATA_TOKEN,
   };
 };

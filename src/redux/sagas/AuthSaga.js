@@ -1,5 +1,5 @@
 import { put, takeLatest, call } from "redux-saga/effects";
-import { fetchLoginFailure, fetchLoginSuccess } from "../actions/Login";
+import { fetchLoginFailure, fetchLoginSuccess } from "../actions/Auth";
 import axios from "axios";
 import { LOGIN_REQUEST } from "../constants";
 
