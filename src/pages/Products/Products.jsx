@@ -15,30 +15,36 @@ const Products = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "Image",
+      title: "Ảnh",
       dataIndex: "image",
       key: "image",
-      render: (text) => <img src={text} className="w-40" />,
+      render: (text) => <img src={text} className="w-24" />,
     },
     {
-      title: "Price",
+      title: "Giá",
       dataIndex: "minPrice",
       key: "price",
       render: (text) => <Typography>{text}</Typography>,
     },
     {
-      title: "Active",
+      title: "Kích hoạt",
       dataIndex: "active",
       key: "active",
       render: (active) => {
         return (
           <>
-            <button>{active ? "true" : "false"}</button>
+            <button
+              className={`${
+                active ? `bg-green-500  ` : `bg-red-500`
+              } rounded-xl w-16 h-7 text-white`}
+            >
+              {active ? "true" : "false"}
+            </button>
           </>
         );
       },
@@ -52,6 +58,7 @@ const Products = () => {
         dataSource={data ? data.result : data}
         columns={columns}
         loading={loading}
+        bordered
       />
     </div>
   );

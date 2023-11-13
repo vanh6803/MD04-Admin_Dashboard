@@ -20,7 +20,6 @@ function* fetchLogin(action) {
       const errorData = response.data;
       yield put(fetchLoginFailure(errorData));
     } else {
-      // Trong trường hợp lỗi mạng, bạn có thể xử lý error.message như bạn muốn
       yield put(fetchLoginFailure(error.message));
     }
   }

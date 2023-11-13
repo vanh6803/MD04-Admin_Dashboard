@@ -5,7 +5,7 @@ import { FECTH_PRODUCT_REQUEST } from "../constants";
 
 console.log(import.meta.env.VITE_BASE_URL);
 
-function* fetchProduct() {
+function* fetchProduct(action) {
   try {
     const response = yield call(() =>
       axios.get(
@@ -24,7 +24,6 @@ function* fetchProduct() {
       const errorData = response.data;
       yield put(fetchProductFailure(errorData));
     } else {
-      // Trong trường hợp lỗi mạng, bạn có thể xử lý error.message như bạn muốn
       yield put(fetchProductFailure(error.message));
     }
   }
