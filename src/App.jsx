@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  DesktopOutlined,
-  PieChartOutlined,
-  PieChartFilled,
-  HomeOutlined,
-} from "@ant-design/icons";
 import { Layout, theme } from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 const { Content } = Layout;
@@ -18,6 +12,9 @@ import "./App.css";
 import SideBar from "./components/SideBar";
 import HeaderBar from "./components/HeaderBar";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchMyProfileRequest } from "./redux/actions/MyProfile";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 function getItem(label, key, icon, children) {
   return {
@@ -51,19 +48,28 @@ const itemMenu = [
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const data = useSelector((state) => state.authReducer.data);
+  const profile = useSelector((state) => state.myProfileReducer.data);
+  const loadingProfile = useSelector((state) => state.myProfileReducer.loading);
   const dispatch = useDispatch();
+  const [infoDecode, setInfoDecode] = useState(null);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   const navigate = useNavigate();
 
   //todo: check login
-  // useEffect(() => {
-  //   console.log(data);
-  //   if (data == null) {
-  //     navigate("/login");
-  //   }
-  // }, [data, navigate]);
+  useEffect(() => {
+    if (data == null) {
+      navigate("/login");
+    }
+  }, [data, navigate]);
+
+  useEffect(() => {
+    if (data) {
+      const decodedToken = jwtDecode(data.token);
+      dispatch(fetchMyProfileRequest(decodedToken.userId, data?.token));
+    }
+  }, [dispatch]);
 
   return (
     <Layout className="h-[100vh]">

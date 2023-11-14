@@ -1,7 +1,7 @@
 import {
-  FECTH_PRODUCT_FAILURE,
-  FECTH_PRODUCT_REQUEST,
-  FECTH_PRODUCT_SUCCESS,
+  FECTH_MY_INFO_FAILURE,
+  FECTH_MY_INFO_REQUEST,
+  FECTH_MY_INFO_SUCCESS,
 } from "../constants";
 
 const initialState = {
@@ -10,31 +10,31 @@ const initialState = {
   error: null,
 };
 
-const productReducer = (state = initialState, action) => {
-  // console.log("product reducer - action: ", action.type);
+const myProfileReducer = (state = initialState, action) => {
+  console.log("my Profile Reducer - action type: ", action.type);
   switch (action.type) {
-    case FECTH_PRODUCT_REQUEST:
+    case FECTH_MY_INFO_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case FECTH_PRODUCT_SUCCESS:
+    case FECTH_MY_INFO_SUCCESS:
       return {
         ...state,
-        loading: false,
-        error: null,
+        loading: true,
         data: action.payload,
+        error: null,
       };
-    case FECTH_PRODUCT_FAILURE:
+    case FECTH_MY_INFO_FAILURE:
       return {
         ...state,
         loading: true,
-        data: null,
         error: action.payload,
       };
+
     default:
       return state;
   }
 };
 
-export default productReducer;
+export default myProfileReducer;

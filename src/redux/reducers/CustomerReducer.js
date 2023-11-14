@@ -11,7 +11,7 @@ const initialState = {
 };
 
 const customerReducer = (state = initialState, action) => {
-  console.log("customer reducer - action type: ", action.type);
+  // console.log("customer reducer - action type: ", action.type);
   switch (action.type) {
     case FECTH_CUSTOMER_REQUEST:
       return {

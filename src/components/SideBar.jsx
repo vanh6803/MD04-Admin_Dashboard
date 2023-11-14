@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { LogoutOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
 import { Layout, Menu, Avatar, Typography, Modal, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -7,14 +6,16 @@ const { Sider } = Layout;
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLogout } from "../redux/actions/Auth";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 const SideBar = ({ collapsed, itemMenu }) => {
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.authReducer.loading);
-  const error = useSelector((state) => state.authReducer.error);
   const data = useSelector((state) => state.authReducer.data);
+  const [infoDecode, setInfoDecode] = useState();
+  const myProfile = useSelector((state) => state.myProfileReducer.data);
 
   const showLogoutModal = () => {
     setLogoutModalVisible(true);
@@ -31,6 +32,9 @@ const SideBar = ({ collapsed, itemMenu }) => {
       })
       .then((response) => {
         dispatch(fetchLogout());
+        Cookies.remove("token");
+        Cookies.remove("email");
+        Cookies.remove("pass");
         navigate("/login");
       })
       .catch((error) => {
@@ -44,6 +48,9 @@ const SideBar = ({ collapsed, itemMenu }) => {
       });
     hideLogoutModal();
   };
+
+  console.log(myProfile);
+
   return (
     <>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -51,10 +58,16 @@ const SideBar = ({ collapsed, itemMenu }) => {
           <div className="flex flex-col justify-center items-center my-6">
             <Avatar
               size={collapsed ? 50 : 100}
-              src="https://image-us.24h.com.vn/upload/3-2023/images/2023-09-12/q--2--1694514524-739-width641height960.jpg"
+              src={
+                myProfile?.data.image
+                  ? myProfile?.data.avatar
+                  : "https://e7.pngegg.com/pngimages/178/595/png-clipart-user-profile-computer-icons-login-user-avatars-monochrome-black.png"
+              }
             />
             {collapsed ? null : (
-              <Typography className="text-white text-xl mt-2">Admin</Typography>
+              <Typography className="text-white text-xl mt-2">
+                {myProfile?.data?.username}
+              </Typography>
             )}
           </div>
           <Menu

@@ -12,7 +12,7 @@ const initialState = {
 };
 
 const AuthReducer = (state = initialState, action) => {
-  console.log("action type - product reducer", action);
+  // console.log("action type - product reducer", action);
   switch (action.type) {
     case LOGIN_REQUEST:
       return {
