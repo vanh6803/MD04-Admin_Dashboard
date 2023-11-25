@@ -2,15 +2,22 @@ import { put, takeLatest, call } from "redux-saga/effects";
 import axios from "axios";
 import { fetchCustomerFail, fetchCustomerSuccess } from "../actions/Customer";
 import { FECTH_CUSTOMER_REQUEST } from "../constants";
+import Cookies from "js-cookie";
 
 function* fetchCustomer(action) {
-  const { page, pageItem, role } = action.payload;
+  const { page, pageItem, role, token } = action.payload;
+  console.log(`Bearer ${token}`);
   try {
     const response = yield call(() =>
       axios.get(
         `${
           import.meta.env.VITE_BASE_URL
-        }user/customers?page=${page}&pageItem=${pageItem}&role=${role}`
+        }user/customers?page=${page}&pageItem=${pageItem}&role=${role}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       )
     );
 

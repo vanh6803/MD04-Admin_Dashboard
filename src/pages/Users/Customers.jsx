@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomerRequest } from "../../redux/actions/Customer";
 import { Avatar, Pagination, Table } from "antd";
+import Cookies from "js-cookie";
 
 const Customers = () => {
   const dispatch = useDispatch();
@@ -11,13 +12,20 @@ const Customers = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [activeButton, setActiveButton] = useState(null);
-
   useEffect(() => {
-    dispatch(fetchCustomerRequest(currentPage, pageSize, "customer"));
+    const token = Cookies.get("token");
+    console.log("token: ", token);
+    dispatch(fetchCustomerRequest(currentPage, pageSize, "customer", token));
   }, [dispatch, currentPage, pageSize]);
 
   const columns = [
+    {
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      render: (text, record, index) => index + 1,
+      width: 50,
+    },
     {
       title: "email",
       dataIndex: "email",
@@ -52,28 +60,21 @@ const Customers = () => {
       title: "Kích hoạt",
       dataIndex: "active",
       key: "active",
-      render: (active, record) => {
+      render: (active) => {
         return (
           <>
             <button
               className={`${
-                record.active ? "bg-green-500" : "bg-red-500"
-              } rounded-xl w-16 h-7 text-white transition-colors duration-300 ${
-                activeButton === record.key ? "active" : ""
-              }`}
-              onClick={() => handleActivation(record._id)}
+                active ? `bg-green-500  ` : `bg-red-500`
+              } rounded-xl w-16 h-7 text-white`}
             >
-              {record.active ? "true" : "false"}
+              {active ? "true" : "false"}
             </button>
           </>
         );
       },
     },
   ];
-
-  const handleActivation = (key) => {
-    console.log(key);
-  };
 
   const handleTableChange = (pagination, filters, sorter) => {
     setCurrentPage(pagination.current);

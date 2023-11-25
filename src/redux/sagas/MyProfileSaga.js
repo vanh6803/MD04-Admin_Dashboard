@@ -8,7 +8,6 @@ import { FECTH_MY_INFO_REQUEST } from "../constants";
 
 function* fetchMyProfile(action) {
   const { uid, token } = action.payload;
-  console.log(token, uid);
   try {
     const response = yield call(() =>
       axios.get(`${import.meta.env.VITE_BASE_URL}user/detail-profile/${uid}`, {
@@ -17,10 +16,8 @@ function* fetchMyProfile(action) {
         },
       })
     );
-    console.log("fetch my profile success - my profile saga: ", response.data);
     yield put(fetchMyProfileSuccess(response.data));
   } catch (error) {
-    console.log("fetch my profile fail - my profile saga: ", error);
     if (error.response) {
       const response = error.response;
       const errorData = response.data;

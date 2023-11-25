@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, theme } from "antd";
+import { Layout, notification, theme } from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 const { Content } = Layout;
 import {
@@ -58,16 +58,41 @@ const App = () => {
   const navigate = useNavigate();
 
   //todo: check login
+  const token = Cookies.get("token");
   useEffect(() => {
-    if (data == null) {
-      navigate("/login");
-    }
-  }, [data, navigate]);
+    const checkTokenExpiration = () => {
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Math.floor(Date.now() / 1000); // current time in seconds
+        if (decodedToken.exp && decodedToken.exp < currentTime) {
+          // Token has expired, redirect to the login page
+          Cookies.remove("token");
+          notification.error({
+            message: "Token Expired",
+            description: "Your session has expired. Please log in again.",
+            duration: 3,
+          }); // Clear the expired token
+          navigate("/login");
+        }
+      } else {
+        navigate("/login");
+      }
+    };
+
+    checkTokenExpiration(); // Check token expiration on initial render
+
+    // Check token expiration on every route change
+    const unlisten = navigate(checkTokenExpiration);
+
+    return () => {
+      unlisten; // Cleanup the listener when the component is unmounted
+    };
+  }, [token, navigate]);
 
   useEffect(() => {
-    if (data) {
-      const decodedToken = jwtDecode(data.token);
-      dispatch(fetchMyProfileRequest(decodedToken.userId, data?.token));
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      dispatch(fetchMyProfileRequest(decodedToken.userId, token));
     }
   }, [dispatch]);
 

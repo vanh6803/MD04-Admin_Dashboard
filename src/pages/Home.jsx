@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import "./home.css";
+import Cookies from "js-cookie";
 
 const Home = () => {
-  const data = useSelector((state) => state.authReducer.data);
+  const token = Cookies.get("token");
   return (
     <>
-      <div>{data?.token}</div>
-      
+      <div>{token}</div>
     </>
   );
 };

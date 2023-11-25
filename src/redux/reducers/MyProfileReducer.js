@@ -11,7 +11,6 @@ const initialState = {
 };
 
 const myProfileReducer = (state = initialState, action) => {
-  console.log("my Profile Reducer - action type: ", action.type);
   switch (action.type) {
     case FECTH_MY_INFO_REQUEST:
       return {

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLoginRequest } from "../../redux/actions/Auth";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const { Title } = Typography;
 
@@ -25,17 +26,6 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  useEffect(() => {
-    // Check if user credentials are saved in cookies
-    let email = Cookies.get("email");
-    let password = Cookies.get("pass");
-    const savedToken = Cookies.get("token");
-    console.log(savedToken);
-    if (savedToken) {
-      dispatch(fetchLoginRequest({ email, password }));
-    }
-  }, []);
 
   const onFinish = () => {
     console.log(email, password);
@@ -59,8 +49,8 @@ const Login = () => {
         });
       } else {
         Cookies.set("token", data.token);
-        Cookies.set("email", email);
-        Cookies.set("pass", password);
+        // Cookies.set("email", email);
+        // Cookies.set("pass", password);
         navigate("/");
       }
     }

@@ -1,34 +1,54 @@
 import React, { useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Layout, Button, theme, Badge, Dropdown } from "antd";
+import {
+  Layout,
+  Button,
+  theme,
+  Badge,
+  Dropdown,
+  Modal,
+  Form,
+  Input,
+  Typography,
+  DatePicker,
+  Space,
+  Flex,
+} from "antd";
 const { Header } = Layout;
 import { UserIcon, BellIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
 import ButtonSelected from "./ButtonSelected";
-
-const itemsUser = [
-  {
-    label: "Change password",
-    key: "0",
-  },
-  {
-    label: "Edit profile",
-    key: "1",
-  },
-  {
-    type: "divider",
-  },
-  {
-    label: "3rd menu item",
-    key: "3",
-  },
-];
+import { useSelector } from "react-redux";
 
 const HeaderBar = ({ toggleMenu, collapsed }) => {
   const [count, setCount] = useState(0);
+  const [openDialogChangePassword, setOpenDialogChangePassword] =
+    useState(false);
+  const [openDialogChangeProfile, setOpenDialogChangeProfile] = useState(false);
+  const myProfile = useSelector((state) => state.myProfileReducer.data);
 
+  const itemsUser = [
+    {
+      label: "Change password",
+      key: "0",
+    },
+    {
+      label: "Edit profile",
+      key: "1",
+    },
+  ];
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const handleClickDropdown = (e) => {
+    switch (e.key) {
+      case "0":
+        return setOpenDialogChangePassword(true);
+      case "1":
+        return setOpenDialogChangeProfile(true);
+    }
+  };
+
   return (
     <>
       <Header
@@ -60,14 +80,155 @@ const HeaderBar = ({ toggleMenu, collapsed }) => {
               }}
             />
           </Badge>
-
-          <ButtonSelected
-            items={itemsUser}
-            icon={<UserIcon className="h-5 w-5" />}
-          />
+          <Dropdown
+            menu={{ items: itemsUser, onClick: handleClickDropdown }}
+            arrow={{
+              pointAtCenter: true,
+            }}
+            trigger={["click"]}
+          >
+            <Button
+              onClick={(e) => e.preventDefault()}
+              icon={<UserIcon className="h-5 w-5" />}
+            />
+          </Dropdown>
         </div>
+        <DialogChangeProfile
+          visible={openDialogChangeProfile}
+          data={myProfile}
+          onCancel={() => {
+            setOpenDialogChangeProfile(false);
+          }}
+        />
+        <DialogChangePassword
+          visible={openDialogChangePassword}
+          onCancel={() => {
+            setOpenDialogChangePassword(false);
+          }}
+        />
       </Header>
     </>
+  );
+};
+
+const DialogChangeProfile = ({ visible, data, onCancel }) => {
+  const dateFormat = "YYYY/MM/DD";
+  return (
+    <Modal open={visible} footer={null} onCancel={onCancel}>
+      <Flex className="bg-white" vertical>
+        <p className="text-xl font-bold self-center my-5">Change Profile </p>
+        <Form layout="vertical" size="middle">
+          <Form.Item
+            name="email"
+            label="Email"
+            initialValue={data?.data?.email}
+          >
+            <Input disabled />
+          </Form.Item>
+          <Form.Item
+            name="username"
+            label="Username"
+            initialValue={data?.data?.username}
+          >
+            <Input placeholder="enter your username" />
+          </Form.Item>
+          <Form.Item
+            name="Full Name"
+            label="Full Name"
+            initialValue={data?.data?.full_name}
+          >
+            <Input placeholder="enter your full name" />
+          </Form.Item>
+          <Form.Item
+            name="birthday"
+            label="Birthday"
+            initialValue={data?.data?.birthday}
+          >
+            <DatePicker
+              format={dateFormat}
+              className="w-full"
+              placeholder="select birthday"
+            />
+          </Form.Item>
+
+          <div className="flex flex-row items-center justify-between ">
+            <Form.Item>
+              <Button htmlType="reset" className="w-[230px]">
+                Clear
+              </Button>
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                htmlType="submit"
+                className="w-[230px] bg-sky-400 text-white"
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
+      </Flex>
+    </Modal>
+  );
+};
+
+const DialogChangePassword = ({ visible, onCancel }) => {
+  return (
+    <Modal open={visible} footer={null} onCancel={onCancel}>
+      <Flex vertical>
+        <p className="text-xl font-bold self-center my-5">Change Password</p>
+        <Form layout="vertical">
+          <Form.Item
+            label="Old password"
+            name={"oldPassword"}
+            rules={[
+              { required: true, message: "Please input your old password!" },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            label="New password"
+            name={"newPassword"}
+            rules={[
+              { required: true, message: "Please input your new password!" },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            label="Confirm password"
+            name={"confitmPassword"}
+            rules={[
+              {
+                required: true,
+                message: "Please input your confirm password!",
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <div className="flex flex-row items-center justify-between">
+            <Form.Item>
+              <Button htmlType="reset" className="w-[230px]">
+                Clear
+              </Button>
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                htmlType="submit"
+                className="w-[230px] bg-sky-400 text-white"
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
+      </Flex>
+    </Modal>
   );
 };
 

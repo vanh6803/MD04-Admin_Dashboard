@@ -11,11 +11,12 @@ import Cookies from "js-cookie";
 
 const SideBar = ({ collapsed, itemMenu }) => {
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [openDialogAvatar, setOpenDialogAvatar] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.authReducer.data);
-  const [infoDecode, setInfoDecode] = useState();
   const myProfile = useSelector((state) => state.myProfileReducer.data);
+
+  const tokenCookie = Cookies.get("token");
 
   const showLogoutModal = () => {
     setLogoutModalVisible(true);
@@ -28,13 +29,11 @@ const SideBar = ({ collapsed, itemMenu }) => {
   const confirmLogout = () => {
     axios
       .get("http://localhost:3000/api/logout", {
-        headers: { Authorization: "Bearer " + data.token },
+        headers: { Authorization: "Bearer " + tokenCookie },
       })
       .then((response) => {
         dispatch(fetchLogout());
         Cookies.remove("token");
-        Cookies.remove("email");
-        Cookies.remove("pass");
         navigate("/login");
       })
       .catch((error) => {
@@ -48,8 +47,6 @@ const SideBar = ({ collapsed, itemMenu }) => {
       });
     hideLogoutModal();
   };
-
-  console.log(myProfile);
 
   return (
     <>

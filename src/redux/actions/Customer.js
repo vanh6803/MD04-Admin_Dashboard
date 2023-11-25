@@ -4,15 +4,14 @@ import {
   FECTH_CUSTOMER_SUCCESS,
 } from "../constants";
 
-export const fetchCustomerRequest = (page, pageItem, role) => {
+export const fetchCustomerRequest = (page, pageItem, role, token) => {
   return {
     type: FECTH_CUSTOMER_REQUEST,
-    payload: { page, pageItem, role },
+    payload: { page, pageItem, role, token },
   };
 };
 
 export const fetchCustomerFail = (error) => {
-  console.log("Failed to fetch customer- action customer: ", error);
   return {
     type: FECTH_CUSTOMER_FAILURE,
     payload: error,

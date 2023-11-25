@@ -19,7 +19,6 @@ export const fetchLoginSuccess = (data) => {
   };
 };
 export const fetchLoginFailure = (error) => {
-  console.log("login action failed", error);
   return {
     type: LOGIN_FAILURE,
     payload: error,

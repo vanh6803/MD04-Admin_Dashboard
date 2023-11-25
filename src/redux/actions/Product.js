@@ -4,10 +4,10 @@ import {
   FECTH_PRODUCT_SUCCESS,
 } from "../constants";
 
-export const fetchProductRequest = (data) => {
+export const fetchProductRequest = (page, limit) => {
   return {
     type: FECTH_PRODUCT_REQUEST,
-    payload: data,
+    payload: {page, limit},
   };
 };
 export const fetchProductSuccess = (data) => {
