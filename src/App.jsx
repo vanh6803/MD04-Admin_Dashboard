@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchMyProfileRequest } from "./redux/actions/MyProfile";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import { fetchCategoryRequest } from "./redux/actions/Category";
+import { fetchStoreRequest } from "./redux/actions/Store";
 
 function getItem(label, key, icon, children) {
   return {
@@ -32,14 +34,15 @@ const itemMenu = [
   ),
   getItem("Sản phẩm", "product", <Squares2X2Icon className="w-5 h-5" />, [
     getItem(<Link to={"/products"}>Tất cả</Link>, "2"),
-    getItem(<Link to={"/stores"}>Cửa hàng</Link>, "3"),
-    getItem(<Link to="/banner">Quảng cáo</Link>, "4"),
+
+    getItem(<Link to="/banner">Quảng cáo</Link>, "3"),
   ]),
   getItem("Biểu đồ", "chart", <DocumentChartBarIcon className="w-5 h-5" />, [
-    getItem(<Link to="/chart/product">Sản phẩm</Link>, "5"),
-    getItem(<Link to="/chart/store">Cửa hàng</Link>, "6"),
+    getItem(<Link to="/chart/product">Sản phẩm</Link>, "4"),
+    getItem(<Link to="/chart/store">Cửa hàng</Link>, "5"),
   ]),
   getItem("Mọi người", "user", <UserGroupIcon className="w-5 h-5" />, [
+    getItem(<Link to={"/stores"}>Cửa hàng</Link>, "6"),
     getItem(<Link to="/customers">Người dùng</Link>, "7"),
     getItem(<Link to="/staffs">Nhân viên</Link>, "8"),
   ]),
@@ -47,11 +50,8 @@ const itemMenu = [
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const data = useSelector((state) => state.authReducer.data);
-  const profile = useSelector((state) => state.myProfileReducer.data);
-  const loadingProfile = useSelector((state) => state.myProfileReducer.loading);
   const dispatch = useDispatch();
-  const [infoDecode, setInfoDecode] = useState(null);
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -88,6 +88,13 @@ const App = () => {
       unlisten; // Cleanup the listener when the component is unmounted
     };
   }, [token, navigate]);
+
+  useEffect(() => {
+    dispatch(fetchCategoryRequest());
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchStoreRequest(token));
+  }, [dispatch]);
 
   useEffect(() => {
     if (token) {

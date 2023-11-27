@@ -7,7 +7,7 @@ import Staffs from "../pages/Users/Staffs";
 import Products from "./../pages/Products/Products";
 import ProductsChart from "./../pages/Charts/Products";
 import StoreChart from "./../pages/Charts/Store";
-import Store from "./../pages/Products/Store";
+import Store from "./../pages/Users/Store";
 import Banner from "./../pages/Products/Banner";
 import ProductDetail from "../pages/Products/ProductDetail";
 

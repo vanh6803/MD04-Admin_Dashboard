@@ -6,11 +6,23 @@ import { FECTH_PRODUCT_REQUEST } from "../constants";
 console.log(import.meta.env.VITE_BASE_URL);
 
 function* fetchProduct(action) {
-  const { page, limit } = action.payload;
+  const { category, store } = action.payload;
+  console.log({
+    category,
+    store,
+  });
   try {
-    const response = yield call(() =>
-      axios.get(`${import.meta.env.VITE_BASE_URL}products/all-product`)
-    );
+    let apiUrl = `${import.meta.env.VITE_BASE_URL}products/all-product?`;
+
+    if (category) {
+      apiUrl += `category=${category}&`;
+    }
+
+    if (store) {
+      apiUrl += `store=${store}&`;
+    }
+
+    const response = yield call(() => axios.get(apiUrl));
     yield put(fetchProductSuccess(response.data));
   } catch (error) {
     if (error.response) {

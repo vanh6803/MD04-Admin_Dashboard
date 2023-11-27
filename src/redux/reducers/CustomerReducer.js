@@ -29,7 +29,6 @@ const customerReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        data: null,
         error: action.payload,
       };
     default:

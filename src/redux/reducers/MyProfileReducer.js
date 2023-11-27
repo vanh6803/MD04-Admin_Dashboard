@@ -20,14 +20,14 @@ const myProfileReducer = (state = initialState, action) => {
     case FECTH_MY_INFO_SUCCESS:
       return {
         ...state,
-        loading: true,
+        loading: false,
         data: action.payload,
         error: null,
       };
     case FECTH_MY_INFO_FAILURE:
       return {
         ...state,
-        loading: true,
+        loading: false,
         error: action.payload,
       };
 

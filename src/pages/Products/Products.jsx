@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Button, Carousel, Flex, Modal, Table, Typography } from "antd";
+import { Button, Carousel, Flex, Modal, Select, Table, Typography } from "antd";
 const { Title } = Typography;
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductRequest } from "../../redux/actions/Product";
-import axios from "axios";
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { fetchCategoryRequest } from "../../redux/actions/Category";
 
 const Products = () => {
-  const loading = useSelector((state) => state.productReducer.loading);
-  const data = useSelector((state) => state.productReducer.data);
-  const error = useSelector((state) => state.productReducer.error);
+  const loadingProduct = useSelector((state) => state.productReducer.loading);
+  const dataProduct = useSelector((state) => state.productReducer.data);
+  const errorProduct = useSelector((state) => state.productReducer.error);
+
+  const loadingCategory = useSelector((state) => state.categoryReducer.loading);
+  const dataCategory = useSelector((state) => state.categoryReducer.data);
+  const errorCategory = useSelector((state) => state.categoryReducer.error);
+
+  const loadingStore = useSelector((state) => state.storeReducer.loading);
+  const dataStore = useSelector((state) => state.storeReducer.data);
+  const errorStore = useSelector((state) => state.storeReducer.error);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -17,10 +26,11 @@ const Products = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedStore, setSelectedStore] = useState(null);
 
   useEffect(() => {
     dispatch(fetchProductRequest());
-    console.log("data: ", data?.result);
   }, [dispatch]);
 
   const columns = [
@@ -35,6 +45,13 @@ const Products = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
+      render: (text) => <Typography>{text}</Typography>,
+    },
+    {
+      title: "Loại sản phẩm",
+      dataIndex: "category_id",
+      key: "category_id",
+      render: (category) => <Typography>{category.name}</Typography>,
     },
     {
       title: "Ảnh",
@@ -79,10 +96,11 @@ const Products = () => {
   const onRow = (record) => {
     return {
       onClick: () => {
-        console.log(record._id); // Assuming there is an 'id' property in your data
-        setSelected(record._id);
-        // setOpenDialog(true);
-        navigate(`/product/${record._id}`);
+        if (record) {
+          setSelected(record._id);
+          // setOpenDialog(true);
+          navigate(`/product/${record._id}`);
+        }
       },
     };
   };
@@ -91,13 +109,77 @@ const Products = () => {
     setPage(pagination.current);
     setLimit(pagination.pageSize);
   };
+  const removeAccents = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  };
 
   return (
     <div>
+      <div className="flex justify-end my-3">
+        <Select
+          showSearch
+          style={{
+            width: 300,
+          }}
+          allowClear
+          size="middle"
+          className=""
+          placeholder="Search to select store"
+          onChange={(value) => {
+            console.log(value);
+            setSelectedStore(value);
+            dispatch(fetchProductRequest(selectedCategory, value));
+          }}
+          filterOption={(input, option) =>
+            removeAccents(option?.label.toLowerCase() ?? "").includes(
+              removeAccents(input.toLowerCase())
+            )
+          }
+          options={
+            dataStore
+              ? dataStore?.data.map((category) => ({
+                  label: category.name,
+                  value: category._id,
+                }))
+              : null
+          }
+          loading={loadingCategory}
+        />
+        {/* select category */}
+        <Select
+          showSearch
+          style={{
+            width: 300,
+            marginLeft: 10,
+          }}
+          allowClear
+          size="middle"
+          placeholder="Search to select category"
+          onChange={(value) => {
+            console.log(value);
+            setSelectedCategory(value);
+            dispatch(fetchProductRequest(value, selectedStore));
+          }}
+          filterOption={(input, option) =>
+            removeAccents(option?.label.toLowerCase() ?? "").includes(
+              removeAccents(input.toLowerCase())
+            )
+          }
+          options={
+            dataCategory
+              ? dataCategory?.data.map((category) => ({
+                  label: category.name,
+                  value: category._id,
+                }))
+              : null
+          }
+          loading={loadingCategory}
+        />
+      </div>
       <Table
-        dataSource={data ? data.result : data}
+        dataSource={dataProduct ? dataProduct.result : dataProduct}
         columns={columns}
-        loading={loading}
+        loading={loadingProduct}
         bordered
         // pagination={{
         //   current: page,
@@ -108,58 +190,7 @@ const Products = () => {
         onRow={onRow}
         rowKey={(record) => record._id}
       />
-      <DialogDetailProduct
-        visible={openDialog}
-        onClose={() => {
-          setOpenDialog(false);
-        }}
-        productId={selected}
-      />
     </div>
-  );
-};
-
-const DialogDetailProduct = ({ visible, onClose, productId }) => {
-  const [data, setData] = useState();
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
-
-  useEffect(() => {
-    axios
-      .get(
-        `${import.meta.env.VITE_BASE_URL}products/detail-product/${productId}`
-      )
-      .then((response) => {
-        console.log("product detail: ", response.data);
-        setData(response.data.result);
-      }).the;
-  }, [visible]);
-
-  return (
-    <Modal
-      open={visible}
-      onCancel={onClose}
-      footer={false}
-      closeIcon={false}
-      width={"60%"}
-    >
-      <Flex vertical>
-        <Title level={3}>{data?.name}</Title>
-        <div>
-          {data?.image.map((image, index) => (
-            <div key={index}>
-              <img src={image} />
-            </div>
-          ))}
-        </div>
-      </Flex>
-    </Modal>
   );
 };
 

@@ -18,15 +18,16 @@ const ProductDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_BASE_URL}products/detail-product/${id}`)
-      .then((resonse) => {
-        console.log(resonse);
-        setData(resonse.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (id) {
+      axios
+        .get(`${import.meta.env.VITE_BASE_URL}products/detail-product/${id}`)
+        .then((resonse) => {
+          setData(resonse.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, []);
 
   const handlePrevSlide = () => {

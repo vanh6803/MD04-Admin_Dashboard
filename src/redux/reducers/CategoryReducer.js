@@ -1,7 +1,7 @@
 import {
-  FECTH_PRODUCT_FAILURE,
-  FECTH_PRODUCT_REQUEST,
-  FECTH_PRODUCT_SUCCESS,
+  FECTH_CATEGORY_SUCCESS,
+  FECTH_CATEGORY_REQUEST,
+  FECTH_CATEGORY_FAILURE,
 } from "../constants";
 
 const initialState = {
@@ -10,25 +10,25 @@ const initialState = {
   error: null,
 };
 
-const productReducer = (state = initialState, action) => {
+const categoryReducer = (state = initialState, action) => {
   // console.log("product reducer - action: ", action.type);
   switch (action.type) {
-    case FECTH_PRODUCT_REQUEST:
+    case FECTH_CATEGORY_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case FECTH_PRODUCT_SUCCESS:
+    case FECTH_CATEGORY_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
         data: action.payload,
       };
-    case FECTH_PRODUCT_FAILURE:
+    case FECTH_CATEGORY_FAILURE:
       return {
         ...state,
-        loading: true,
+        loading: false,
         error: action.payload,
       };
     default:
@@ -36,4 +36,4 @@ const productReducer = (state = initialState, action) => {
   }
 };
 
-export default productReducer;
+export default categoryReducer;
