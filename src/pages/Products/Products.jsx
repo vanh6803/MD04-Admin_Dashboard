@@ -4,12 +4,14 @@ const { Title } = Typography;
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductRequest } from "../../redux/actions/Product";
 import axios from "axios";
+import { json, useNavigate } from "react-router-dom";
 
 const Products = () => {
   const loading = useSelector((state) => state.productReducer.loading);
   const data = useSelector((state) => state.productReducer.data);
   const error = useSelector((state) => state.productReducer.error);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [selected, setSelected] = useState();
   const [openDialog, setOpenDialog] = useState(false);
@@ -44,7 +46,15 @@ const Products = () => {
       title: "Giá",
       dataIndex: "minPrice",
       key: "price",
-      render: (text) => <Typography>{text}</Typography>,
+      render: (text) => (
+        <Typography>{text ? text.toLocaleString("vi-VN") : ""}</Typography>
+      ),
+    },
+    {
+      title: "Cửa hàng",
+      dataIndex: "store_id",
+      key: "store_id",
+      render: (store) => <Typography>{store.name}</Typography>,
     },
     {
       title: "Kích hoạt",
@@ -71,7 +81,8 @@ const Products = () => {
       onClick: () => {
         console.log(record._id); // Assuming there is an 'id' property in your data
         setSelected(record._id);
-        setOpenDialog(true);
+        // setOpenDialog(true);
+        navigate(`/product/${record._id}`);
       },
     };
   };

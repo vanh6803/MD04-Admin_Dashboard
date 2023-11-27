@@ -161,7 +161,8 @@ const DialogChangeProfile = ({ visible, data, onCancel }) => {
             <Form.Item>
               <Button
                 htmlType="submit"
-                className="w-[230px] bg-sky-400 text-white"
+                type="primary"
+                className="bg-[#407cff] px-10 w-[230px]"
               >
                 Submit
               </Button>
@@ -220,7 +221,8 @@ const DialogChangePassword = ({ visible, onCancel }) => {
             <Form.Item>
               <Button
                 htmlType="submit"
-                className="w-[230px] bg-sky-400 text-white"
+                type="primary"
+                className="bg-[#407cff] px-10 w-[230px]"
               >
                 Submit
               </Button>

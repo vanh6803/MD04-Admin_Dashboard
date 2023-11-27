@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomerRequest } from "../../redux/actions/Customer";
-import { Avatar, Pagination, Table } from "antd";
+import {
+  Avatar,
+  Button,
+  Flex,
+  Form,
+  Input,
+  Modal,
+  Pagination,
+  Table,
+} from "antd";
 import Cookies from "js-cookie";
 
 const Staffs = () => {
@@ -12,6 +21,7 @@ const Staffs = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [openDialogAddStaff, setOpenDialogAddStaff] = useState(false);
 
   const token = Cookies.get("token");
 
@@ -76,13 +86,23 @@ const Staffs = () => {
     },
   ];
 
-
   const handleTableChange = (pagination, filters, sorter) => {
     setCurrentPage(pagination.current);
     setPageSize(pagination.pageSize);
   };
   return (
-    <>
+    <div>
+      <div className="flex flex-row justify-end mb-5">
+        <Button
+          onClick={() => {
+            setOpenDialogAddStaff(true);
+          }}
+          type="primary"
+          className="bg-[#407cff] px-10"
+        >
+          Add
+        </Button>
+      </div>
       <Table
         dataSource={data ? data.result : data}
         columns={columns}
@@ -96,7 +116,52 @@ const Staffs = () => {
         onChange={handleTableChange}
         rowKey={(record) => record._id}
       />
-    </>
+      <DialogAddStaff
+        visible={openDialogAddStaff}
+        onCancel={() => {
+          setOpenDialogAddStaff(false);
+        }}
+      />
+    </div>
+  );
+};
+
+const DialogAddStaff = ({ visible, onCancel }) => {
+  return (
+    <Modal open={visible} footer={null} onCancel={onCancel}>
+      <Flex className="bg-white" vertical>
+        <p className="text-xl font-bold self-center my-5">Add Staff</p>
+        <Form layout="vertical" size="middle">
+          <Form.Item name="email" label="Email">
+            <Input placeholder="enter email" />
+          </Form.Item>
+          <Form.Item name="password" label="Password">
+            <Input.Password placeholder="enter password" />
+          </Form.Item>
+          <Form.Item name="confirmPassword" label="Confirm password">
+            <Input.Password placeholder="enter confirm password" />
+          </Form.Item>
+
+          <div className="flex flex-row items-center justify-between ">
+            <Form.Item>
+              <Button htmlType="reset" className="w-[230px]">
+                Clear
+              </Button>
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                htmlType="submit"
+                type="primary"
+                className="bg-[#407cff] px-10 w-[230px]"
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
+      </Flex>
+    </Modal>
   );
 };
 

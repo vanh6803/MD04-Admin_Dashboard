@@ -9,6 +9,7 @@ import ProductsChart from "./../pages/Charts/Products";
 import StoreChart from "./../pages/Charts/Store";
 import Store from "./../pages/Products/Store";
 import Banner from "./../pages/Products/Banner";
+import ProductDetail from "../pages/Products/ProductDetail";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -26,4 +27,5 @@ export const router = createBrowserRouter([
       { path: "/chart/store", element: <StoreChart /> },
     ],
   },
+  { path: "/product/:id", element: <ProductDetail /> },
 ]);
