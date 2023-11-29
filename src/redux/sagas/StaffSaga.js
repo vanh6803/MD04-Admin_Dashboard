@@ -1,10 +1,10 @@
 import { put, takeLatest, call } from "redux-saga/effects";
 import axios from "axios";
-import { fetchCustomerFail, fetchCustomerSuccess } from "../actions/Customer";
-import { FECTH_CUSTOMER_REQUEST } from "../constants";
+import { FECTH_STAFF_REQUEST} from "../constants";
 import Cookies from "js-cookie";
+import { fetchStaffFail, fetchStaffSuccess } from "../actions/Staff";
 
-function* fetchCustomer(action) {
+function* fetchStaff(action) {
   const {role, token } = action.payload;
   try {
     const response = yield call(() =>
@@ -14,19 +14,18 @@ function* fetchCustomer(action) {
         },
       })
     );
-    yield put(fetchCustomerSuccess(response.data));
+    yield put(fetchStaffSuccess(response.data));
   } catch (error) {
-    console.log("fetch customer fail - customer saga: ", error);
     if (error.response) {
       const response = error.response;
       const errorData = response.data;
-      yield put(fetchCustomerFail(errorData));
+      yield put(fetchStaffFail(errorData));
     } else {
-      yield put(fetchCustomerFail(error.message));
+      yield put(fetchStaffFail(error.message));
     }
   }
 }
 
-export default function* watchFetchCustomer() {
-  yield takeLatest(FECTH_CUSTOMER_REQUEST, fetchCustomer);
+export default function* watchFetchStaff() {
+  yield takeLatest(FECTH_STAFF_REQUEST, fetchStaff);
 }

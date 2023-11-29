@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCustomerRequest } from "../../redux/actions/Customer";
 import {
   Avatar,
   Button,
@@ -8,26 +7,29 @@ import {
   Form,
   Input,
   Modal,
-  Pagination,
   Table,
+  notification,
 } from "antd";
 import Cookies from "js-cookie";
+import axios from "axios";
+import { fetchStaffRequest } from "../../redux/actions/Staff";
+
+const token = Cookies.get("token");
 
 const Staffs = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.customerReducer.data);
-  const loading = useSelector((state) => state.customerReducer.loading);
-  const error = useSelector((state) => state.customerReducer.error);
+  const data = useSelector((state) => state.staffReducer.data);
+  const loading = useSelector((state) => state.staffReducer.loading);
+  const error = useSelector((state) => state.staffReducer.error);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [openDialogAddStaff, setOpenDialogAddStaff] = useState(false);
 
-  const token = Cookies.get("token");
-
-  useEffect(() => {
-    dispatch(fetchCustomerRequest(currentPage, pageSize, "staff", token));
-  }, [dispatch, currentPage, pageSize]);
+  // useEffect(() => {
+  //   dispatch(fetchStaffRequest("staff", token));
+  //   console.log(data);
+  // }, [dispatch]);
   const columns = [
     {
       title: "STT",
@@ -68,7 +70,7 @@ const Staffs = () => {
     },
     {
       title: "Kích hoạt",
-      dataIndex: "active",
+      dataIndex: "is_active",
       key: "active",
       render: (active) => {
         return (
@@ -78,7 +80,7 @@ const Staffs = () => {
                 active ? `bg-green-500  ` : `bg-red-500`
               } rounded-xl w-16 h-7 text-white`}
             >
-              {active ? "true" : "false"}
+              {active ? "active" : "inactive"}
             </button>
           </>
         );
@@ -108,12 +110,12 @@ const Staffs = () => {
         columns={columns}
         loading={loading}
         bordered
-        pagination={{
-          current: currentPage,
-          pageSize: pageSize,
-          total: data ? data.totalPages : 0,
-        }}
-        onChange={handleTableChange}
+        // pagination={{
+        //   current: currentPage,
+        //   pageSize: pageSize,
+        //   total: data ? data.totalPages : 0,
+        // }}
+        // onChange={handleTableChange}
         rowKey={(record) => record._id}
       />
       <DialogAddStaff
@@ -127,19 +129,107 @@ const Staffs = () => {
 };
 
 const DialogAddStaff = ({ visible, onCancel }) => {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState();
+  const dispatch = useDispatch();
+
+  const handleFinish = () => {
+    axios
+      .post(
+        `${import.meta.env.VITE_BASE_URL}user/create-staff`,
+        { email, password },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        notification.success({
+          message: "success",
+          description: "create staff successfully",
+          duration: 3,
+          type: "success",
+        });
+        // Dispatch a new action to fetch the updated data
+        dispatch(fetchStaffRequest("staff", token));
+
+        // Close the modal
+        onCancel();
+      })
+      .catch((error) => {
+        console.log(error);
+        notification.error({
+          error: "error",
+          description: "create staff failed",
+          duration: 3,
+          type: "error",
+        });
+      });
+  };
+
   return (
     <Modal open={visible} footer={null} onCancel={onCancel}>
       <Flex className="bg-white" vertical>
         <p className="text-xl font-bold self-center my-5">Add Staff</p>
-        <Form layout="vertical" size="middle">
-          <Form.Item name="email" label="Email">
-            <Input placeholder="enter email" />
+        <Form layout="vertical" size="middle" onFinish={handleFinish}>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[{ required: true, message: "Please input your email!" }]}
+          >
+            <Input
+              placeholder="enter email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
           </Form.Item>
-          <Form.Item name="password" label="Password">
-            <Input.Password placeholder="enter password" />
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[
+              { required: true, message: "Please input your password!" },
+              {
+                min: 8,
+                message: "Password must be at least 8 characters long.",
+              },
+            ]}
+          >
+            <Input.Password
+              placeholder="enter password"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
           </Form.Item>
-          <Form.Item name="confirmPassword" label="Confirm password">
-            <Input.Password placeholder="enter confirm password" />
+          <Form.Item
+            name="confirmPassword"
+            label="Confirm password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your confirm password!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("The passwords do not match.")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              placeholder="enter confirm password"
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+              }}
+            />
           </Form.Item>
 
           <div className="flex flex-row items-center justify-between ">

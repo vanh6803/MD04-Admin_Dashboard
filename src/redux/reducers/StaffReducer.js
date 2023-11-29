@@ -1,8 +1,8 @@
 import {
-  FECTH_CUSTOMER_FAILURE,
-  FECTH_CUSTOMER_REQUEST,
-  FECTH_CUSTOMER_SUCCESS,
-} from "./../constants/index";
+  FECTH_STAFF_FAILURE,
+  FECTH_STAFF_REQUEST,
+  FECTH_STAFF_SUCCESS,
+} from "../constants/index";
 
 const initialState = {
   loading: false,
@@ -10,21 +10,21 @@ const initialState = {
   error: null,
 };
 
-const customerReducer = (state = initialState, action) => {
+const staffReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FECTH_CUSTOMER_REQUEST:
+    case FECTH_STAFF_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case FECTH_CUSTOMER_SUCCESS:
+    case FECTH_STAFF_SUCCESS:
       return {
         ...state,
         loading: false,
         data: action.payload,
         error: null,
       };
-    case FECTH_CUSTOMER_FAILURE:
+    case FECTH_STAFF_FAILURE:
       return {
         ...state,
         loading: false,
@@ -35,4 +35,4 @@ const customerReducer = (state = initialState, action) => {
   }
 };
 
-export default customerReducer;
+export default staffReducer;

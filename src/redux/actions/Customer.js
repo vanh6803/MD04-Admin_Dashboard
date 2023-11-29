@@ -4,10 +4,10 @@ import {
   FECTH_CUSTOMER_SUCCESS,
 } from "../constants";
 
-export const fetchCustomerRequest = (page, pageItem, role, token) => {
+export const fetchCustomerRequest = (role, token) => {
   return {
     type: FECTH_CUSTOMER_REQUEST,
-    payload: { page, pageItem, role, token },
+    payload: { role, token },
   };
 };
 

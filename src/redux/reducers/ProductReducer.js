@@ -11,7 +11,6 @@ const initialState = {
 };
 
 const productReducer = (state = initialState, action) => {
-  // console.log("product reducer - action: ", action.type);
   switch (action.type) {
     case FECTH_PRODUCT_REQUEST:
       return {

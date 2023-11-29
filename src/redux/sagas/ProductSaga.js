@@ -7,10 +7,6 @@ console.log(import.meta.env.VITE_BASE_URL);
 
 function* fetchProduct(action) {
   const { category, store } = action.payload;
-  console.log({
-    category,
-    store,
-  });
   try {
     let apiUrl = `${import.meta.env.VITE_BASE_URL}products/all-product?`;
 

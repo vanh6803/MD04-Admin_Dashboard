@@ -14,8 +14,7 @@ const Customers = () => {
   const [pageSize, setPageSize] = useState(10);
   useEffect(() => {
     const token = Cookies.get("token");
-    console.log("token: ", token);
-    dispatch(fetchCustomerRequest(currentPage, pageSize, "customer", token));
+    dispatch(fetchCustomerRequest("customer", token));
   }, [dispatch, currentPage, pageSize]);
 
   const columns = [
@@ -58,7 +57,7 @@ const Customers = () => {
     },
     {
       title: "Kích hoạt",
-      dataIndex: "active",
+      dataIndex: "is_active",
       key: "active",
       render: (active) => {
         return (

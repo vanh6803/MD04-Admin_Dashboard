@@ -5,6 +5,7 @@ import watchFetchCustomer from "./customerSaga";
 import watchFetchMyProfile from "./MyProfileSaga";
 import watchFetchCategory from "./CategorySaga";
 import watchFetchStore from "./StoreSaga";
+import watchFetchStaff from "./StaffSaga";
 
 function* rootSaga() {
   yield all([
@@ -14,6 +15,7 @@ function* rootSaga() {
     watchFetchMyProfile(),
     watchFetchCategory(),
     watchFetchStore(),
+    watchFetchStaff(),
   ]);
 }
 export default rootSaga;

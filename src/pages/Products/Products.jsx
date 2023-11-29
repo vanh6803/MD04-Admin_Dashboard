@@ -29,9 +29,9 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedStore, setSelectedStore] = useState(null);
 
-  useEffect(() => {
-    dispatch(fetchProductRequest());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchProductRequest());
+  // }, [dispatch]);
 
   const columns = [
     {
@@ -173,7 +173,7 @@ const Products = () => {
                 }))
               : null
           }
-          loading={loadingCategory}
+          loading={loadingStore}
         />
       </div>
       <Table

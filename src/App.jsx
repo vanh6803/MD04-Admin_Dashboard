@@ -12,11 +12,14 @@ import "./App.css";
 import SideBar from "./components/SideBar";
 import HeaderBar from "./components/HeaderBar";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMyProfileRequest } from "./redux/actions/MyProfile";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import { fetchMyProfileRequest } from "./redux/actions/MyProfile";
 import { fetchCategoryRequest } from "./redux/actions/Category";
 import { fetchStoreRequest } from "./redux/actions/Store";
+import { fetchStaffRequest } from "./redux/actions/Staff";
+import { fetchProductRequest } from "./redux/actions/Product";
+import { fetchCustomerRequest } from "./redux/actions/Customer";
 
 function getItem(label, key, icon, children) {
   return {
@@ -91,10 +94,23 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchCategoryRequest());
-  }, [dispatch]);
+  }, []);
+
   useEffect(() => {
     dispatch(fetchStoreRequest(token));
-  }, [dispatch]);
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchCustomerRequest("customer", token));
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchStaffRequest("staff", token));
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchProductRequest());
+  }, []);
 
   useEffect(() => {
     if (token) {
