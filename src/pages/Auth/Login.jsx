@@ -28,12 +28,10 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const onFinish = () => {
-    console.log(email, password);
     dispatch(fetchLoginRequest({ email, password }));
   };
 
   useEffect(() => {
-    console.log("Error:", error); // Check the value of error
     if (error) {
       notification.error({
         message: "Login Failed",

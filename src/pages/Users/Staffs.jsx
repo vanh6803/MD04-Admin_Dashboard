@@ -69,18 +69,26 @@ const Staffs = () => {
       key: "role",
     },
     {
-      title: "Kích hoạt",
-      dataIndex: "is_active",
-      key: "active",
-      render: (active) => {
+      title: "",
+      key: "delete",
+      render: (record) => {
         return (
           <>
             <button
-              className={`${
-                active ? `bg-green-500  ` : `bg-red-500`
-              } rounded-xl w-16 h-7 text-white`}
+              className={`bg-red-500 rounded-xl w-16 h-7 text-white`}
+              onClick={() => {
+                Modal.confirm({
+                  title: "Do you want change the active product?",
+                  onOk: () => handleDeleteStaff(record._id),
+                  okButtonProps: {
+                    style: {
+                      backgroundColor: "#407cff",
+                    },
+                  },
+                });
+              }}
             >
-              {active ? "active" : "inactive"}
+              Xóa
             </button>
           </>
         );
@@ -88,9 +96,34 @@ const Staffs = () => {
     },
   ];
 
-  const handleTableChange = (pagination, filters, sorter) => {
-    setCurrentPage(pagination.current);
-    setPageSize(pagination.pageSize);
+  const handleDeleteStaff = (id) => {
+    axios
+      .delete(
+        `${import.meta.env.VITE_BASE_URL}user/delete-staff-account/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        dispatch(fetchStaffRequest("staff", token));
+        notification.success({
+          message: "success",
+          description: "Delete staff successfully",
+          duration: 3,
+          type: "success",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        notification.error({
+          error: "error",
+          description: "Delete staff failed",
+          duration: 3,
+          type: "error",
+        });
+      });
   };
   return (
     <div>
@@ -110,12 +143,6 @@ const Staffs = () => {
         columns={columns}
         loading={loading}
         bordered
-        // pagination={{
-        //   current: currentPage,
-        //   pageSize: pageSize,
-        //   total: data ? data.totalPages : 0,
-        // }}
-        // onChange={handleTableChange}
         rowKey={(record) => record._id}
       />
       <DialogAddStaff
@@ -133,7 +160,6 @@ const DialogAddStaff = ({ visible, onCancel }) => {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const dispatch = useDispatch();
-
   const handleFinish = () => {
     axios
       .post(

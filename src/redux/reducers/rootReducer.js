@@ -5,7 +5,8 @@ import customerReducer from "./CustomerReducer";
 import myProfileReducer from "./MyProfileReducer";
 import categoryReducer from "./CategoryReducer";
 import storeReducer from "./StoreReducer";
-import staffReducer from './StaffReducer';
+import staffReducer from "./StaffReducer";
+import productDetailReducer from "./ProductDetailReducer";
 
 const rootReducer = combineReducers({
   authReducer: AuthReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   myProfileReducer: myProfileReducer,
   categoryReducer: categoryReducer,
   storeReducer: storeReducer,
-  staffReducer: staffReducer
+  staffReducer: staffReducer,
+  productDetailReducer: productDetailReducer,
 });
 
 export default rootReducer;

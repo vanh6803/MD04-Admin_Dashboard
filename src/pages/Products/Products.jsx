@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Button, Carousel, Flex, Modal, Select, Table, Typography } from "antd";
-const { Title } = Typography;
+import {
+  Button,
+  Carousel,
+  Flex,
+  Modal,
+  Select,
+  Table,
+  Typography,
+  notification,
+} from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductRequest } from "../../redux/actions/Product";
-import { useNavigate } from "react-router-dom";
-import { fetchCategoryRequest } from "../../redux/actions/Category";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { fetchProductDetailRequest } from "../../redux/actions/DetailProduct";
+const { Title } = Typography;
+const { confirm } = Modal;
 
 const Products = () => {
   const loadingProduct = useSelector((state) => state.productReducer.loading);
@@ -29,10 +40,6 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedStore, setSelectedStore] = useState(null);
 
-  // useEffect(() => {
-  //   dispatch(fetchProductRequest());
-  // }, [dispatch]);
-
   const columns = [
     {
       title: "STT",
@@ -45,7 +52,15 @@ const Products = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      render: (text) => <Typography>{text}</Typography>,
+      render: (text, record) => (
+        <button
+          onClick={() => {
+            navigate(`/product/${record._id}`);
+          }}
+        >
+          <Typography>{text}</Typography>
+        </button>
+      ),
     },
     {
       title: "Loại sản phẩm",
@@ -77,38 +92,70 @@ const Products = () => {
       title: "Kích hoạt",
       dataIndex: "active",
       key: "active",
-      render: (active) => {
-        return (
-          <>
-            <button
-              className={`${
-                active ? `bg-green-500  ` : `bg-red-500`
-              } rounded-xl w-16 h-7 text-white`}
-            >
-              {active ? "true" : "false"}
-            </button>
-          </>
-        );
-      },
+      render: (active, record) => (
+        <button
+          onClick={() => {
+            confirm({
+              title: "Do you want change the active product?",
+              onOk: () => {
+                axios
+                  .put(
+                    `${
+                      import.meta.env.VITE_BASE_URL
+                    }products/change-active-product/${record._id}`
+                  )
+                  .then((response) => {
+                    dispatch(fetchProductRequest());
+                    notification.success({
+                      message: "success",
+                      description: "Change active successfully",
+                      duration: 3,
+                      type: "success",
+                    });
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    notification.error({
+                      error: "error",
+                      description: "Change active  failed",
+                      duration: 3,
+                      type: "error",
+                    });
+                  });
+              },
+              okButtonProps: {
+                style: {
+                  backgroundColor: "#407cff",
+                },
+              },
+            });
+          }}
+          className={`${
+            active ? `bg-green-500` : `bg-red-500`
+          } rounded-xl w-16 h-7 text-white`}
+        >
+          {active ? "true" : "false"}
+        </button>
+      ),
     },
   ];
 
-  const onRow = (record) => {
-    return {
-      onClick: () => {
-        if (record) {
-          setSelected(record._id);
-          // setOpenDialog(true);
-          navigate(`/product/${record._id}`);
-        }
-      },
-    };
-  };
+  // const onRow = (record) => {
+  //   return {
+  //     onClick: () => {
+  //       if (record) {
+  //         setSelected(record._id);
+  //         // setOpenDialog(true);
+  //         navigate(`/product/${record._id}`);
+  //       }
+  //     },
+  //   };
+  // };
 
-  const handleTableChange = (pagination, filters, sorter) => {
-    setPage(pagination.current);
-    setLimit(pagination.pageSize);
-  };
+  // const handleTableChange = (pagination, filters, sorter) => {
+  //   setPage(pagination.current);
+  //   setLimit(pagination.pageSize);
+  // };
   const removeAccents = (str) => {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   };
@@ -187,7 +234,7 @@ const Products = () => {
         //   total: data ? data.totalPages : 0,
         // }}
         // onChange={handleTableChange}
-        onRow={onRow}
+        // onRow={onRow}
         rowKey={(record) => record._id}
       />
     </div>

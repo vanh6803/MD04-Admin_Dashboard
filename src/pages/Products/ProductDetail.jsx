@@ -1,4 +1,4 @@
-import { Col, Flex, Layout, Row, Typography, Badge } from "antd";
+import { Col, Flex, Layout, Row, Typography, Badge, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   ArrowLeftIcon,
@@ -7,26 +7,25 @@ import {
 } from "@heroicons/react/24/outline";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductDetailRequest } from "../../redux/actions/DetailProduct";
 
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const data = useSelector((state) => state.productDetailReducer.data);
+  const loading = useSelector((state) => state.productDetailReducer.loading);
 
   useEffect(() => {
     if (id) {
-      axios
-        .get(`${import.meta.env.VITE_BASE_URL}products/detail-product/${id}`)
-        .then((resonse) => {
-          setData(resonse.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      dispatch(fetchProductDetailRequest(id));
     }
   }, []);
 
@@ -41,6 +40,44 @@ const ProductDetail = () => {
       prevSlide < data?.result.image.length - 1 ? prevSlide + 1 : 0
     );
   };
+
+  const handleChangeActive = () => {
+    axios
+      .put(
+        `${import.meta.env.VITE_BASE_URL}products/change-active-product/${id}`
+      )
+      .then((response) => {
+        dispatch(fetchProductDetailRequest(id));
+        notification.success({
+          message: "success",
+          description: "Change active successfully",
+          duration: 3,
+          type: "success",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        notification.error({
+          error: "error",
+          description: "Change active  failed",
+          duration: 3,
+          type: "error",
+        });
+      });
+  };
+
+  if (loading) {
+    return (
+      <Flex vertical>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </Flex>
+    );
+  }
 
   return (
     <Layout>
@@ -58,6 +95,7 @@ const ProductDetail = () => {
         </div>
         <div className="">
           <button
+            onClick={handleChangeActive}
             className={`flex justify-center items-center ${
               data?.result.is_active ? `bg-green-500  ` : `bg-red-500`
             } rounded-xl text-white w-20 h-10`}
