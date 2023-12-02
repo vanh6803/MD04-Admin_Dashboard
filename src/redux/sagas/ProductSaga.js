@@ -3,8 +3,6 @@ import { fetchProductFailure, fetchProductSuccess } from "../actions/Product";
 import axios from "axios";
 import { FECTH_PRODUCT_REQUEST } from "../constants";
 
-console.log(import.meta.env.VITE_BASE_URL);
-
 function* fetchProduct(action) {
   const { category, store } = action.payload;
   try {

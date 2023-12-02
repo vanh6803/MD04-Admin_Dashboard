@@ -14,13 +14,12 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { fetchStaffRequest } from "../../redux/actions/Staff";
 
-const token = Cookies.get("token");
-
 const Staffs = () => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.staffReducer.data);
   const loading = useSelector((state) => state.staffReducer.loading);
   const error = useSelector((state) => state.staffReducer.error);
+  const token = Cookies.get("token");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -78,7 +77,7 @@ const Staffs = () => {
               className={`bg-red-500 rounded-xl w-16 h-7 text-white`}
               onClick={() => {
                 Modal.confirm({
-                  title: "Do you want change the active product?",
+                  title: "Do you want delete the account staff?",
                   onOk: () => handleDeleteStaff(record._id),
                   okButtonProps: {
                     style: {
@@ -156,11 +155,13 @@ const Staffs = () => {
 };
 
 const DialogAddStaff = ({ visible, onCancel }) => {
+  const token = Cookies.get("token");
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const dispatch = useDispatch();
   const handleFinish = () => {
+    console.log(token);
     axios
       .post(
         `${import.meta.env.VITE_BASE_URL}user/create-staff`,

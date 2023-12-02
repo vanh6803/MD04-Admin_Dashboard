@@ -117,7 +117,7 @@ const App = () => {
       const decodedToken = jwtDecode(token);
       dispatch(fetchMyProfileRequest(decodedToken.userId, token));
     }
-  }, [dispatch]);
+  }, []);
 
   return (
     <Layout className="h-[100vh]">
