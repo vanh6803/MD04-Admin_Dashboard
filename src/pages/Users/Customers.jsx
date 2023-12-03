@@ -12,10 +12,10 @@ const Customers = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  useEffect(() => {
-    const token = Cookies.get("token");
-    dispatch(fetchCustomerRequest("customer", token));
-  }, [dispatch, currentPage, pageSize]);
+  // useEffect(() => {
+  //   const token = Cookies.get("token");
+  //   dispatch(fetchCustomerRequest("customer", token));
+  // }, [dispatch, currentPage, pageSize]);
 
   const columns = [
     {

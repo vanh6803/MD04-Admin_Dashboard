@@ -1,4 +1,13 @@
-import { Col, Flex, Layout, Row, Typography, Badge, Skeleton } from "antd";
+import {
+  Col,
+  Flex,
+  Layout,
+  Row,
+  Typography,
+  Badge,
+  Skeleton,
+  Modal,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import {
   ArrowLeftIcon,
@@ -95,12 +104,24 @@ const ProductDetail = () => {
         </div>
         <div className="">
           <button
-            onClick={handleChangeActive}
+            onClick={() => {
+              Modal.confirm({
+                title: "Bạn muốn thay đổi trạng thái sản phẩm",
+                okButtonProps: {
+                  style: {
+                    backgroundColor: "#407cff",
+                  },
+                },
+                onOk: () => {
+                  handleChangeActive();
+                },
+              });
+            }}
             className={`flex justify-center items-center ${
               data?.result.is_active ? `bg-green-500  ` : `bg-red-500`
-            } rounded-xl text-white w-20 h-10`}
+            } rounded-xl text-white min-w-0-[80px] px-2 h-10`}
           >
-            {data?.result.is_active ? "Active" : "Inactive"}
+            {data?.result.is_active ? "Kích hoạt" : "Chưa kích hoạt"}
           </button>
         </div>
       </Header>
@@ -118,7 +139,7 @@ const ProductDetail = () => {
                     <img
                       src={data?.result.image[currentSlide]}
                       alt={`slide-${currentSlide}`}
-                      className=" object-cover"
+                      className=" object-cover min-h-[300px]"
                     />
                   </div>
                 )}
@@ -140,7 +161,7 @@ const ProductDetail = () => {
                 {data?.result.image.map((image, index) => (
                   <div
                     key={index}
-                    className={`bg-white m-1 rounded-lg overflow-hidden shadow-md ${
+                    className={`bg-white m-1  min-h-[60px] rounded-lg overflow-hidden shadow-md ${
                       index === currentSlide ? "border border-black" : ""
                     }`}
                     onClick={() => setCurrentSlide(index)}
@@ -153,10 +174,12 @@ const ProductDetail = () => {
             {/* TODO: info option */}
             <Col span={12} className="">
               <div className="flex justify-between items-center">
-                <Title level={3}>{data?.result.name}</Title>
+                <Title level={3} style={{ marginBottom: 0 }}>
+                  {data?.result.name}
+                </Title>
                 <div className="text-base">
                   {data?.result.discounted ? (
-                    <div className="bg-red-500 p-3 text-white rounded-3xl">
+                    <div className="bg-red-500 p-2 px-3 text-white rounded-xl">
                       giảm giá
                     </div>
                   ) : (
