@@ -109,7 +109,7 @@ const Staffs = () => {
         dispatch(fetchStaffRequest("staff", token));
         notification.success({
           message: "success",
-          description: "Delete staff successfully",
+          description: "Xóa tài khoản nhân viên thành công",
           duration: 3,
           type: "success",
         });
@@ -118,7 +118,7 @@ const Staffs = () => {
         console.log(error);
         notification.error({
           error: "error",
-          description: "Delete staff failed",
+          description: "Xóa tài khoản nhân viên thất bại",
           duration: 3,
           type: "error",
         });

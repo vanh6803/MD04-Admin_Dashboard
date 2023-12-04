@@ -36,18 +36,18 @@ const itemMenu = [
     <HomeIcon className="w-5 h-5" />
   ),
   getItem("Sản phẩm", "product", <Squares2X2Icon className="w-5 h-5" />, [
-    getItem(<Link to={"/products"}>Tất cả</Link>, "2"),
-
-    getItem(<Link to="/banner">Quảng cáo</Link>, "3"),
+    getItem(<Link to={"/products"}>Sản phẩm</Link>, "2"),
+    getItem(<Link to={"/categories"}>Loại sản phẩm</Link>, "3"),
+    getItem(<Link to="/banner">Quảng cáo</Link>, "4"),
   ]),
   getItem("Biểu đồ", "chart", <DocumentChartBarIcon className="w-5 h-5" />, [
-    getItem(<Link to="/chart/product">Sản phẩm</Link>, "4"),
-    getItem(<Link to="/chart/store">Cửa hàng</Link>, "5"),
+    getItem(<Link to="/chart/product">Sản phẩm</Link>, "5"),
+    getItem(<Link to="/chart/store">Cửa hàng</Link>, "6"),
   ]),
   getItem("Mọi người", "user", <UserGroupIcon className="w-5 h-5" />, [
-    getItem(<Link to={"/stores"}>Cửa hàng</Link>, "6"),
-    getItem(<Link to="/customers">Người dùng</Link>, "7"),
-    getItem(<Link to="/staffs">Nhân viên</Link>, "8"),
+    getItem(<Link to={"/stores"}>Cửa hàng</Link>, "7"),
+    getItem(<Link to="/customers">Người dùng</Link>, "8"),
+    // getItem(<Link to="/staffs">Nhân viên</Link>, "8"),
   ]),
 ];
 

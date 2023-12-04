@@ -10,6 +10,7 @@ import StoreChart from "./../pages/Charts/Store";
 import Store from "./../pages/Users/Store";
 import Banner from "./../pages/Products/Banner";
 import ProductDetail from "../pages/Products/ProductDetail";
+import Category from "../pages/Products/Category";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
       { path: "/customers", element: <Customers /> },
       { path: "/staffs", element: <Staffs /> },
       { path: "/products", element: <Products /> },
+      { path: "/categories", element: <Category /> },
       { path: "/stores", element: <Store /> },
       { path: "/banner", element: <Banner /> },
       { path: "/chart/product", element: <ProductsChart /> },

@@ -14,10 +14,12 @@ import { fetchProductRequest } from "../../redux/actions/Product";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { fetchProductDetailRequest } from "../../redux/actions/DetailProduct";
+import Cookies from "js-cookie";
 const { Title } = Typography;
 const { confirm } = Modal;
 
 const Products = () => {
+  const token = Cookies.get("token");
   const loadingProduct = useSelector((state) => state.productReducer.loading);
   const dataProduct = useSelector((state) => state.productReducer.data);
   const errorProduct = useSelector((state) => state.productReducer.error);
@@ -96,19 +98,25 @@ const Products = () => {
         <button
           onClick={() => {
             confirm({
-              title: "Do you want change the active product?",
+              title: "Bạn muốn thay đổi trạng thái của sản phẩm này?",
               onOk: () => {
                 axios
                   .put(
                     `${
                       import.meta.env.VITE_BASE_URL
-                    }products/change-active-product/${record._id}`
+                    }products/change-active-product/${record._id}`,
+                    {},
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
                   )
                   .then((response) => {
                     dispatch(fetchProductRequest());
                     notification.success({
-                      message: "success",
-                      description: "Change active successfully",
+                      message: "Thành công",
+                      description: "Chuyển trạng thái thành công!",
                       duration: 3,
                       type: "success",
                     });
@@ -116,8 +124,8 @@ const Products = () => {
                   .catch((error) => {
                     console.log(error);
                     notification.error({
-                      error: "error",
-                      description: "Change active  failed",
+                      error: "Thất Bại",
+                      description: "Chuyển trạng thái thất bại!",
                       duration: 3,
                       type: "error",
                     });
@@ -131,10 +139,10 @@ const Products = () => {
             });
           }}
           className={`${
-            active ? `bg-green-500` : `bg-red-500`
-          } rounded-xl w-16 h-7 text-white`}
+            active ? `bg-green-500  ` : `bg-red-500`
+          } rounded-lg px-3 py-2 text-white`}
         >
-          {active ? "true" : "false"}
+          {active ? "Kích hoạt" : "Chưa kích hoạt"}
         </button>
       ),
     },
