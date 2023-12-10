@@ -15,6 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { fetchProductDetailRequest } from "../../redux/actions/DetailProduct";
 import Cookies from "js-cookie";
+import ProductDetail from "./ProductDetail";
 const { Title } = Typography;
 const { confirm } = Modal;
 
@@ -57,7 +58,8 @@ const Products = () => {
       render: (text, record) => (
         <button
           onClick={() => {
-            navigate(`/product/${record._id}`);
+            navigate(`/products/${record._id}`);
+            setOpenDialog(true);
           }}
         >
           <Typography>{text}</Typography>
@@ -147,23 +149,6 @@ const Products = () => {
       ),
     },
   ];
-
-  // const onRow = (record) => {
-  //   return {
-  //     onClick: () => {
-  //       if (record) {
-  //         setSelected(record._id);
-  //         // setOpenDialog(true);
-  //         navigate(`/product/${record._id}`);
-  //       }
-  //     },
-  //   };
-  // };
-
-  // const handleTableChange = (pagination, filters, sorter) => {
-  //   setPage(pagination.current);
-  //   setLimit(pagination.pageSize);
-  // };
   const removeAccents = (str) => {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   };
@@ -236,13 +221,6 @@ const Products = () => {
         columns={columns}
         loading={loadingProduct}
         bordered
-        // pagination={{
-        //   current: page,
-        //   pageSize: limit,
-        //   total: data ? data.totalPages : 0,
-        // }}
-        // onChange={handleTableChange}
-        // onRow={onRow}
         rowKey={(record) => record._id}
       />
     </div>

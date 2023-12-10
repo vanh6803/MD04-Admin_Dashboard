@@ -13,11 +13,15 @@ import {
   DatePicker,
   Space,
   Flex,
+  notification,
 } from "antd";
 const { Header } = Layout;
 import { UserIcon, BellIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
-import ButtonSelected from "./ButtonSelected";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { fetchMyProfileRequest } from "./../redux/actions/MyProfile";
+import Cookies from "js-cookie";
+import moment from "moment";
 
 const HeaderBar = ({ toggleMenu, collapsed }) => {
   const [count, setCount] = useState(0);
@@ -28,11 +32,11 @@ const HeaderBar = ({ toggleMenu, collapsed }) => {
 
   const itemsUser = [
     {
-      label: "Change password",
+      label: "Đổi mật khẩu",
       key: "0",
     },
     {
-      label: "Edit profile",
+      label: "Chỉnh sửa profile",
       key: "1",
     },
   ];
@@ -112,12 +116,66 @@ const HeaderBar = ({ toggleMenu, collapsed }) => {
 };
 
 const DialogChangeProfile = ({ visible, data, onCancel }) => {
-  const dateFormat = "YYYY/MM/DD";
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const dateFormat = "DD/MM/YYYY";
+  const token = Cookies.get("token");
+
+  const handleFinish = (values) => {
+    console.log("Form values:", values);
+
+    const { username, birthday, full_name } = values;
+
+    const formattedBirthday = moment(birthday);
+
+    axios
+      .put(
+        `${import.meta.env.VITE_BASE_URL}user/edit-profile/${data?.data._id}`,
+        {
+          username: username,
+          full_name: full_name,
+          birthday: formattedBirthday,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        dispatch(fetchMyProfileRequest(data?.data._id, token));
+        notification.success({
+          message: "Thành công",
+          description: "Cập nhật thông tin cá nhân thành công!",
+          duration: 3,
+          type: "success",
+        });
+        form.resetFields();
+        onCancel();
+      })
+      .catch((error) => {
+        console.log(error);
+        notification.error({
+          error: "Thất Bại",
+          description: "Cập nhật thông tin cá nhân thất bại!",
+          duration: 3,
+          type: "error",
+        });
+      });
+  };
+
   return (
     <Modal open={visible} footer={null} onCancel={onCancel}>
       <Flex className="bg-white" vertical>
-        <p className="text-xl font-bold self-center my-5">Change Profile </p>
-        <Form layout="vertical" size="middle">
+        <p className="text-xl font-bold self-center my-5">
+          Chỉnh sửa thông tin cá nhân
+        </p>
+        <Form
+          form={form}
+          layout="vertical"
+          size="middle"
+          onFinish={handleFinish}
+        >
           <Form.Item
             name="email"
             label="Email"
@@ -133,7 +191,7 @@ const DialogChangeProfile = ({ visible, data, onCancel }) => {
             <Input placeholder="enter your username" />
           </Form.Item>
           <Form.Item
-            name="Full Name"
+            name="full_name"
             label="Full Name"
             initialValue={data?.data?.full_name}
           >
@@ -142,12 +200,16 @@ const DialogChangeProfile = ({ visible, data, onCancel }) => {
           <Form.Item
             name="birthday"
             label="Birthday"
-            initialValue={data?.data?.birthday}
+            initialValue={
+              data?.data?.birthday ? moment(data?.data?.birthday) : null
+            }
           >
             <DatePicker
               format={dateFormat}
               className="w-full"
               placeholder="select birthday"
+              showToday
+              picker="date"
             />
           </Form.Item>
 
@@ -175,6 +237,8 @@ const DialogChangeProfile = ({ visible, data, onCancel }) => {
 };
 
 const DialogChangePassword = ({ visible, onCancel }) => {
+  const handleFinish = (value) => {};
+
   return (
     <Modal open={visible} footer={null} onCancel={onCancel}>
       <Flex vertical>
@@ -194,6 +258,10 @@ const DialogChangePassword = ({ visible, onCancel }) => {
             name={"newPassword"}
             rules={[
               { required: true, message: "Please input your new password!" },
+              {
+                min: 8,
+                message: "Password must be at least 8 characters long.",
+              },
             ]}
           >
             <Input.Password />
@@ -206,6 +274,16 @@ const DialogChangePassword = ({ visible, onCancel }) => {
                 required: true,
                 message: "Please input your confirm password!",
               },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("The passwords do not match.")
+                  );
+                },
+              }),
             ]}
           >
             <Input.Password />

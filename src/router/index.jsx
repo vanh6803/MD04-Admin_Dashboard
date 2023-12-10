@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "/customers", element: <Customers /> },
       { path: "/staffs", element: <Staffs /> },
-      { path: "/products", element: <Products /> },
+      { path: "/products", element: <Products />, children: [] },
       { path: "/categories", element: <Category /> },
       { path: "/stores", element: <Store /> },
       { path: "/banner", element: <Banner /> },
@@ -29,5 +29,5 @@ export const router = createBrowserRouter([
       { path: "/chart/store", element: <StoreChart /> },
     ],
   },
-  { path: "/product/:id", element: <ProductDetail /> },
+  { path: "/products/:id", element: <ProductDetail /> },
 ]);

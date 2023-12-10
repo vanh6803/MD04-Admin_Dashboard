@@ -17,22 +17,26 @@ import axios from "axios";
 const { Sider } = Layout;
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
-import { UploadOutlined } from "@ant-design/icons";
 import { fetchLogout } from "../redux/actions/Auth";
-import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
-import { data } from "autoprefixer";
 import "./sideBar.css";
 import { fetchMyProfileRequest } from "../redux/actions/MyProfile";
 
 const SideBar = ({ collapsed, itemMenu }) => {
+  const location = useLocation();
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [openDialogAvatar, setOpenDialogAvatar] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState("/");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const myProfile = useSelector((state) => state.myProfileReducer.data);
 
   const tokenCookie = Cookies.get("token");
+
+  useEffect(() => {
+    const pathName = location.pathname;
+    setSelectedKeys(pathName);
+  }, [location.pathname]);
 
   const showLogoutModal = () => {
     setLogoutModalVisible(true);
@@ -50,6 +54,7 @@ const SideBar = ({ collapsed, itemMenu }) => {
       .then((response) => {
         dispatch(fetchLogout());
         Cookies.remove("token");
+        Cookies.remove("role");
         navigate("/login");
       })
       .catch((error) => {
@@ -89,6 +94,7 @@ const SideBar = ({ collapsed, itemMenu }) => {
           <Menu
             theme="dark"
             defaultSelectedKeys={["1"]}
+            selectedKeys={[selectedKeys]}
             mode="inline"
             items={itemMenu}
           />
@@ -185,7 +191,11 @@ const DialogAvatar = ({ open, onCancel, data }) => {
             <Avatar
               className="m-3 avatar-hovered"
               size={200}
-              src={data?.data.avatar}
+              src={
+                data?.data.avatar
+                  ? data?.data.avatar
+                  : "https://e7.pngegg.com/pngimages/178/595/png-clipart-user-profile-computer-icons-login-user-avatars-monochrome-black.png"
+              }
             />
           )}
         </Upload>

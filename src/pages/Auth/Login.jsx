@@ -47,7 +47,7 @@ const Login = () => {
         });
       } else {
         Cookies.set("token", data.token);
-        localStorage.setItem("role", data.role);         
+        Cookies.set("role", data.role);
         // Cookies.set("email", email);
         // Cookies.set("pass", password);
         navigate("/");
