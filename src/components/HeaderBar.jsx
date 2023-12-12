@@ -237,13 +237,50 @@ const DialogChangeProfile = ({ visible, data, onCancel }) => {
 };
 
 const DialogChangePassword = ({ visible, onCancel }) => {
-  const handleFinish = (value) => {};
+  const [form] = Form.useForm();
+  const handleFinish = (value) => {
+    const { oldPassword, newPassword, confirmPassword } = value;
+    axios
+      .put(
+        `${import.meta.env.VITE_BASE_URL}user/change-password/${
+          data?.data._id
+        }`,
+        { oldPassword, newPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        notification.success({
+          message: "Thành công",
+          description: "Cập nhật mật khẩu thành công!",
+          duration: 3,
+          type: "success",
+        });
+        form.resetFields();
+        onCancel();
+      })
+      .catch((error) => {
+        notification.error({
+          error: "Thất Bại",
+          description: error.data ? error.data.message : error.message,
+          duration: 3,
+          type: "error",
+        });
+      });
+  };
+  const handleClear = () => {
+    form.resetFields();
+    onCancel();
+  };
 
   return (
-    <Modal open={visible} footer={null} onCancel={onCancel}>
+    <Modal open={visible} footer={null} onCancel={onCancel} closeIcon={false}>
       <Flex vertical>
         <p className="text-xl font-bold self-center my-5">Change Password</p>
-        <Form layout="vertical">
+        <Form form={form} layout="vertical" onFinish={handleFinish}>
           <Form.Item
             label="Old password"
             name={"oldPassword"}
@@ -268,7 +305,7 @@ const DialogChangePassword = ({ visible, onCancel }) => {
           </Form.Item>
           <Form.Item
             label="Confirm password"
-            name={"confitmPassword"}
+            name={"confirmPassword"}
             rules={[
               {
                 required: true,
@@ -291,7 +328,11 @@ const DialogChangePassword = ({ visible, onCancel }) => {
 
           <div className="flex flex-row items-center justify-between">
             <Form.Item>
-              <Button htmlType="reset" className="w-[230px]">
+              <Button
+                htmlType="button"
+                className="w-[230px]"
+                onClick={handleClear}
+              >
                 Clear
               </Button>
             </Form.Item>

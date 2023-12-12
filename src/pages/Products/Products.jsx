@@ -3,9 +3,12 @@ import {
   Button,
   Carousel,
   Flex,
+  Form,
+  Input,
   Modal,
   Select,
   Table,
+  Tooltip,
   Typography,
   notification,
 } from "antd";
@@ -16,6 +19,7 @@ import axios from "axios";
 import { fetchProductDetailRequest } from "../../redux/actions/DetailProduct";
 import Cookies from "js-cookie";
 import ProductDetail from "./ProductDetail";
+import { useForm } from "antd/es/form/Form";
 const { Title } = Typography;
 const { confirm } = Modal;
 
@@ -42,6 +46,8 @@ const Products = () => {
   const [limit, setLimit] = useState(5);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedStore, setSelectedStore] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState();
+  const [openDialogSendEmail, setOpenDialogSendEmail] = useState(false);
 
   const columns = [
     {
@@ -76,7 +82,7 @@ const Products = () => {
       title: "Ảnh",
       dataIndex: "image",
       key: "image",
-      render: (text) => <img src={text} className="w-24" />,
+      render: (text) => <img src={text} className="w-20" />,
     },
     {
       title: "Giá",
@@ -147,6 +153,73 @@ const Products = () => {
           {active ? "Kích hoạt" : "Chưa kích hoạt"}
         </button>
       ),
+    },
+    {
+      title: "",
+      key: "sendEmail",
+      render: (record) => (
+        <Button
+          disabled={record.active ? true : false}
+          onClick={() => {
+            setOpenDialogSendEmail(true);
+            setSelectedProduct(record);
+          }}
+        >
+          Gửi mail
+        </Button>
+      ),
+    },
+    {
+      title: "",
+      key: "action",
+      render: (record) => {
+        return (
+          <Button
+            disabled={record.active ? true : false}
+            danger
+            onClick={() => {
+              Modal.confirm({
+                title: "Xóa sản phẩm",
+                content: `Bạn muốn xóa sản phẩm ${record.name} của cửa hàng ${record.store_id.name}?`,
+                okButtonProps: {
+                  style: {
+                    backgroundColor: "#407cff",
+                  },
+                },
+                onOk: () => {
+                  axios
+                    .delete(
+                      `${
+                        import.meta.env.VITE_BASE_URL
+                      }products/delete-product/${record?._id}`,
+                      { headers: { Authorization: `Bearer ${token}` } }
+                    )
+                    .then((response) => {
+                      notification.success({
+                        message: "Thành công",
+                        description: "Xóa sản phẩm thành công!",
+                        duration: 3,
+                        type: "success",
+                      });
+                      dispatch(fetchProductRequest());
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                      notification.error({
+                        error: "Thất Bại",
+                        description: "Xóa sản phẩm thất bại",
+                        duration: 3,
+                        type: "error",
+                      });
+                    });
+                },
+              });
+            }}
+          >
+            Xóa
+          </Button>
+        );
+      },
     },
   ];
   const removeAccents = (str) => {
@@ -223,8 +296,99 @@ const Products = () => {
         bordered
         rowKey={(record) => record._id}
       />
+      <DialogSendEmail
+        open={openDialogSendEmail}
+        onCancel={() => {
+          setOpenDialogSendEmail(false);
+        }}
+        data={selectedProduct}
+      />
     </div>
   );
 };
 
 export default Products;
+
+const DialogSendEmail = ({ open, onCancel, data }) => {
+  const [formRef] = Form.useForm();
+  const token = Cookies.get("token");
+  const handleFinish = (value) => {
+    const { content } = value;
+    const dataSend = {
+      productId: data._id,
+      storeId: data.store_id._id,
+      content,
+    };
+    axios
+      .post(`${import.meta.env.VITE_BASE_URL}products/send-email`, dataSend, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        notification.success({
+          message: "Thành công",
+          description: "Gửi email thành công!",
+          duration: 3,
+          type: "success",
+        });
+        formRef.resetFields();
+        onCancel();
+      })
+      .catch((error) => {
+        notification.error({
+          error: "Thất Bại",
+          description: "Gửi email thất bại",
+          duration: 3,
+          type: "error",
+        });
+      });
+  };
+  const handleCancel = () => {
+    formRef.resetFields();
+    onCancel();
+  };
+  return (
+    <Modal open={open} footer={null} onCancel={onCancel} closeIcon={false}>
+      <Flex vertical justify="center">
+        <Typography.Title level={3} className="self-center">
+          Gửi email cảnh báo
+        </Typography.Title>
+        <Form
+          form={formRef}
+          layout="vertical"
+          size="middle"
+          onFinish={handleFinish}
+        >
+          <Form.Item
+            name="content"
+            rules={[
+              { required: true, message: "Please input your content email!" },
+            ]}
+          >
+            <Input.TextArea placeholder="nội dung email" rows={6} />
+          </Form.Item>
+          <div className="flex flex-row items-center justify-between ">
+            <Form.Item>
+              <Button
+                htmlType="button"
+                className="w-[230px]"
+                onClick={handleCancel}
+              >
+                Hủy
+              </Button>
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                htmlType="submit"
+                type="primary"
+                className="bg-[#407cff] px-10 w-[230px]"
+              >
+                Gửi
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
+      </Flex>
+    </Modal>
+  );
+};

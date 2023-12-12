@@ -6,7 +6,9 @@ import { FECTH_PRODUCT_REQUEST } from "../constants";
 function* fetchProduct(action) {
   const { category, store } = action.payload;
   try {
-    let apiUrl = `${import.meta.env.VITE_BASE_URL}products/all-product?`;
+    let apiUrl = `${
+      import.meta.env.VITE_BASE_URL
+    }products/all-product?sort=-1&`;
 
     if (category) {
       apiUrl += `category=${category}&`;
