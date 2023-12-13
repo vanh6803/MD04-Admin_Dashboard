@@ -7,6 +7,7 @@ import categoryReducer from "./CategoryReducer";
 import storeReducer from "./StoreReducer";
 import staffReducer from "./StaffReducer";
 import productDetailReducer from "./ProductDetailReducer";
+import bannerReducer from "./BannerReducer";
 
 const rootReducer = combineReducers({
   authReducer: AuthReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   storeReducer: storeReducer,
   staffReducer: staffReducer,
   productDetailReducer: productDetailReducer,
+  bannerReducer: bannerReducer,
 });
 
 export default rootReducer;

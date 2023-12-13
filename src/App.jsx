@@ -20,6 +20,7 @@ import { fetchStoreRequest } from "./redux/actions/Store";
 import { fetchStaffRequest } from "./redux/actions/Staff";
 import { fetchProductRequest } from "./redux/actions/Product";
 import { fetchCustomerRequest } from "./redux/actions/Customer";
+import { fetchBannerRequest } from "./redux/actions/Banner";
 
 function getItem(label, key, icon, children) {
   return {
@@ -113,6 +114,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchProductRequest());
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchBannerRequest());
   }, []);
 
   useEffect(() => {
