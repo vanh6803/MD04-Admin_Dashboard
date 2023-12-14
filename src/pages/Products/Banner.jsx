@@ -160,19 +160,10 @@ const DialogAddBanner = ({ open, onCancel }) => {
   };
   const handleCancel = () => {
     form.resetFields();
-    handleCancel();
+    onCancel();
   };
   return (
-    <Modal
-      open={open}
-      footer={null}
-      onCancel={() => {
-        if (loading == false) {
-          oncancel();
-          form.resetFields();
-        }
-      }}
-    >
+    <Modal open={open} footer={null} onCancel={handleCancel}>
       <Flex vertical justify="center">
         <Typography.Title className="self-center mt-3" level={3}>
           Tạo quảng cáo
