@@ -36,11 +36,6 @@ const Banner = () => {
       render: (image) => <img src={image} className="h-36" />,
     },
     {
-      title: "ghi chú",
-      dataIndex: "note",
-      key: "note",
-    },
-    {
       title: "",
       key: "action",
       render: (record) => {
@@ -139,7 +134,6 @@ const DialogAddBanner = ({ open, onCancel }) => {
     axios
       .post(`${import.meta.env.VITE_BASE_URL}banner/add`, formData)
       .then((response) => {
-        // Handle success
         console.log(response.data);
         dispatch(fetchBannerRequest());
         onCancel();
