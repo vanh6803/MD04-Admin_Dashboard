@@ -11,7 +11,9 @@ import {
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLoginRequest } from "../redux/actions/Auth";
+import { fetchLoginRequest } from "../../redux/actions/Auth";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const { Title } = Typography;
 
@@ -26,12 +28,10 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const onFinish = () => {
-    console.log(email, password);
     dispatch(fetchLoginRequest({ email, password }));
   };
 
   useEffect(() => {
-    console.log("Error:", error); // Check the value of error
     if (error) {
       notification.error({
         message: "Login Failed",
@@ -46,6 +46,10 @@ const Login = () => {
           duration: 3,
         });
       } else {
+        Cookies.set("token", data.token);
+        Cookies.set("role", data.role);
+        // Cookies.set("email", email);
+        // Cookies.set("pass", password);
         navigate("/");
       }
     }

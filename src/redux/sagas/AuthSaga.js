@@ -11,16 +11,13 @@ function* fetchLogin(action) {
       axios.post(`${import.meta.env.VITE_BASE_URL}login`, { email, password })
     );
 
-    console.log("fetch Login success - login saga: ", response.data);
     yield put(fetchLoginSuccess(response.data));
   } catch (error) {
-    console.log("fetch Login fail - login saga: ", error);
     if (error.response) {
       const response = error.response;
       const errorData = response.data;
       yield put(fetchLoginFailure(errorData));
     } else {
-      // Trong trường hợp lỗi mạng, bạn có thể xử lý error.message như bạn muốn
       yield put(fetchLoginFailure(error.message));
     }
   }

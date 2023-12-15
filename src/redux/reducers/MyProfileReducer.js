@@ -1,8 +1,7 @@
 import {
-  CLEAR_DATA_TOKEN,
-  LOGIN_FAILURE,
-  LOGIN_REQUEST,
-  LOGIN_SUCCESS,
+  FECTH_MY_INFO_FAILURE,
+  FECTH_MY_INFO_REQUEST,
+  FECTH_MY_INFO_SUCCESS,
 } from "../constants";
 
 const initialState = {
@@ -11,39 +10,30 @@ const initialState = {
   error: null,
 };
 
-const AuthReducer = (state = initialState, action) => {
+const myProfileReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN_REQUEST:
+    case FECTH_MY_INFO_REQUEST:
       return {
         ...state,
         loading: true,
-        error: null,
-        data: null,
       };
-    case LOGIN_SUCCESS:
+    case FECTH_MY_INFO_SUCCESS:
       return {
         ...state,
         loading: false,
         data: action.payload,
         error: null,
       };
-    case LOGIN_FAILURE:
+    case FECTH_MY_INFO_FAILURE:
       return {
         ...state,
         loading: false,
         error: action.payload,
-        data: null,
       };
-    case CLEAR_DATA_TOKEN:
-      return {
-        ...state,
-        loading: false,
-        error: null,
-        data: null,
-      };
+
     default:
       return state;
   }
 };
 
-export default AuthReducer;
+export default myProfileReducer;

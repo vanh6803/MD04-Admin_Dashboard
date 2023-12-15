@@ -1,7 +1,7 @@
 import {
-  FECTH_PRODUCT_FAILURE,
-  FECTH_PRODUCT_REQUEST,
-  FECTH_PRODUCT_SUCCESS,
+  FECTH_BANNER_REQUEST,
+  FECTH_BANNER_SUCCESS,
+  FECTH_BANNER_FAILURE,
 } from "../constants";
 
 const initialState = {
@@ -10,24 +10,24 @@ const initialState = {
   error: null,
 };
 
-const productReducer = (state = initialState, action) => {
+const bannerReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FECTH_PRODUCT_REQUEST:
+    case FECTH_BANNER_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case FECTH_PRODUCT_SUCCESS:
+    case FECTH_BANNER_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
         data: action.payload,
       };
-    case FECTH_PRODUCT_FAILURE:
+    case FECTH_BANNER_FAILURE:
       return {
         ...state,
-        loading: true,
+        loading: false,
         error: action.payload,
       };
     default:
@@ -35,4 +35,4 @@ const productReducer = (state = initialState, action) => {
   }
 };
 
-export default productReducer;
+export default bannerReducer;
