@@ -32,6 +32,9 @@ const Home = () => {
   const dataUser = useSelector((state) => state.customerReducer.data);
   const dataStore = useSelector((state) => state.storeReducer.data);
   const dataProduct = useSelector((state) => state.productReducer.data);
+  const loadingProduct = useSelector((state) => state.productReducer.loading);
+  const loadingStore = useSelector((state) => state.storeReducer.loading);
+  const loadingUser = useSelector((state) => state.customerReducer.loading);
   const [top5Product, setTop5Product] = useState(null);
   const [loadingTop5Product, setLoadingTop5Product] = useState(false);
   const [topStore, setTopStore] = useState(null);
@@ -103,6 +106,7 @@ const Home = () => {
             title="Người dùng kích hoạt"
             value={dataUser ? dataUser?.result.length : 0}
             formatter={formatter}
+            loading={loadingUser}
           />
         </Card>
         <Card bordered size="default" className="shadow-md m-3">
@@ -110,6 +114,7 @@ const Home = () => {
             title="Cửa hàng kích hoạt"
             value={dataStore ? dataStore?.data.length : 0}
             formatter={formatter}
+            loading={loadingStore}
           />
         </Card>
         <Card bordered size="default" className="shadow-md  m-3">
@@ -117,18 +122,21 @@ const Home = () => {
             title="Sản phẩm hiện có"
             value={dataProduct ? dataProduct?.result.length : 0}
             formatter={formatter}
+            loading={loadingProduct}
           />
         </Card>
       </Flex>
       <div>
         <Row>
           <Col span={12} className="">
-            <Card
-              className="m-3 shadow-lg"
-              title="Top cửa hàng doanh thu cao nhất tháng"
-            >
+            <div className="flex flex-col border rounded-md shadow-lg m-3 p-3">
+              <div className="p-2 px-5">
+                <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                  Top cửa hàng doanh thu cao nhất tháng
+                </Typography.Title>
+              </div>
               <BarChart data={topStore?.data} />
-            </Card>
+            </div>
           </Col>
           <Col span={12} className="">
             <div className="flex flex-col border rounded-md shadow-lg m-3">
@@ -142,6 +150,7 @@ const Home = () => {
                 dataSource={top5Product?.data}
                 columns={columns}
                 rowKey={(record) => record._id}
+                loading={loadingTop5Product}
               />
             </div>
           </Col>
