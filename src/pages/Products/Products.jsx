@@ -64,6 +64,7 @@ const Products = () => {
       render: (text, record) => (
         <button
           onClick={() => {
+            console.log(record._id);
             navigate(`/products/${record._id}`);
             setOpenDialog(true);
           }}

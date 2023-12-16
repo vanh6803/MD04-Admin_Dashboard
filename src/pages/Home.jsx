@@ -95,6 +95,9 @@ const Home = () => {
       title: "Tổng doanh thu",
       dataIndex: "totalRevenue",
       key: "totalRevenue",
+      render: (text) => (
+        <Typography>{text ? text.toLocaleString("vi-VN")+ " đ" : ""}</Typography>
+      ),
     },
   ];
 
