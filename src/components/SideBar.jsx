@@ -48,7 +48,7 @@ const SideBar = ({ collapsed, itemMenu }) => {
 
   const confirmLogout = () => {
     axios
-      .get("http://localhost:3000/api/logout", {
+      .get(`${import.meta.env.VITE_BASE_URL}logout`, {
         headers: { Authorization: "Bearer " + tokenCookie },
       })
       .then((response) => {
@@ -107,7 +107,7 @@ const SideBar = ({ collapsed, itemMenu }) => {
         >
           <ArrowLeftOnRectangleIcon className="text-gray-100 w-6 h6" />
           {collapsed ? null : (
-            <span className="text-gray-100 ml-3">Logout</span>
+            <span className="text-gray-100 ml-3">Đăng xuất</span>
           )}
         </button>
         <Modal
