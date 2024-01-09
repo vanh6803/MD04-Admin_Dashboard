@@ -68,7 +68,7 @@ const Login = () => {
           alignItems: "center",
         }}
       >
-        <Title level={3}>Login</Title>
+        <Title level={3}>Đăng nhập</Title>
         <Form
           name="loginForm"
           initialValues={{ remember: true }}
@@ -100,9 +100,9 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Item>
-          <Form.Item name="remember" valuePropName="checked">
+          {/* <Form.Item name="remember" valuePropName="checked">
             <Checkbox>Remember me</Checkbox>
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item>
             <Button
               type="primary"
@@ -110,7 +110,7 @@ const Login = () => {
               className="w-full bg-[#4096ff] h-[50px] text-base"
               loading={loading}
             >
-              Login
+              Đăng nhập
             </Button>
           </Form.Item>
         </Form>

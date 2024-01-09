@@ -76,14 +76,14 @@ const HeaderBar = ({ toggleMenu, collapsed }) => {
         />
         <div className="mx-10 flex items-center">
           {/* <Button icon={<SunIcon className="h-6 w-6" />} className="mr-5" /> */}
-          <Badge count={count} className="mr-5" overflowCount={99}>
+          {/* <Badge count={count} className="mr-5" overflowCount={99}>
             <Button
               icon={<BellIcon className="h-5 w-5" />}
               onClick={() => {
                 setCount(count + 1);
               }}
             />
-          </Badge>
+          </Badge> */}
           <Dropdown
             menu={{ items: itemsUser, onClick: handleClickDropdown }}
             arrow={{
@@ -105,6 +105,7 @@ const HeaderBar = ({ toggleMenu, collapsed }) => {
           }}
         />
         <DialogChangePassword
+          data={myProfile}
           visible={openDialogChangePassword}
           onCancel={() => {
             setOpenDialogChangePassword(false);
@@ -236,8 +237,9 @@ const DialogChangeProfile = ({ visible, data, onCancel }) => {
   );
 };
 
-const DialogChangePassword = ({ visible, onCancel }) => {
+const DialogChangePassword = ({ visible, onCancel, data }) => {
   const [form] = Form.useForm();
+  const token = Cookies.get("token");
   const handleFinish = (value) => {
     const { oldPassword, newPassword, confirmPassword } = value;
     axios
@@ -282,43 +284,41 @@ const DialogChangePassword = ({ visible, onCancel }) => {
         <p className="text-xl font-bold self-center my-5">Change Password</p>
         <Form form={form} layout="vertical" onFinish={handleFinish}>
           <Form.Item
-            label="Old password"
+            label="Mật khẩu cũ"
             name={"oldPassword"}
             rules={[
-              { required: true, message: "Please input your old password!" },
+              { required: true, message: "Hãy nhập mật khẩu cũ của bạn" },
             ]}
           >
             <Input.Password />
           </Form.Item>
           <Form.Item
-            label="New password"
+            label="Mật khẩu mới"
             name={"newPassword"}
             rules={[
-              { required: true, message: "Please input your new password!" },
+              { required: true, message: "hãy nhập mật khẩu mới của bạn" },
               {
                 min: 8,
-                message: "Password must be at least 8 characters long.",
+                message: "Mật khẩu mới phải có ít nhât 8 ký tự",
               },
             ]}
           >
             <Input.Password />
           </Form.Item>
           <Form.Item
-            label="Confirm password"
+            label="Xác nhận mật khẩu"
             name={"confirmPassword"}
             rules={[
               {
                 required: true,
-                message: "Please input your confirm password!",
+                message: "Nhập lại mật khẩu",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
+                  if (!value || getFieldValue("newPassword") === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(
-                    new Error("The passwords do not match.")
-                  );
+                  return Promise.reject(new Error("Mật khẩu không khớp"));
                 },
               }),
             ]}
